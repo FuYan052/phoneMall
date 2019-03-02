@@ -45,7 +45,7 @@ export default {
   }
   .hotWrap {
     width: 88%;
-    height: 620px;
+    height: 650px;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
@@ -54,7 +54,7 @@ export default {
 
     dl{
         width: 24.2%;
-        height: 300px;
+        height: 320px;
         background: white;
         color: black;
 
