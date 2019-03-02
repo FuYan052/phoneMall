@@ -32,7 +32,7 @@ export default {
 
 <style lang='scss' scoped>
 .hotSale {
-  height: 475px;
+  height: 575px;
 
   .title {
     width: 100%;
@@ -45,14 +45,14 @@ export default {
   }
   .hotWrap {
     width: 88%;
-    height: 400px;
+    height: 500px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
 
     dl{
         width: 32.6%;
-        height: 400px;
+        height: 500px;
         background: white;
         color: black;
 

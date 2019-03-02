@@ -39,7 +39,6 @@ export default {
 }
 #components-layout-demo-basic,
 .ant-layout {
-  height: 100%;
   text-align: center;
   justify-content: space-between;
 }
