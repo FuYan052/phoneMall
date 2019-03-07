@@ -6,7 +6,7 @@
         </div>
         <div class="content">
             <ul class="tab-header">
-                <li><input type="checkbox"/>全选/多选</li>
+                <li><input type="checkbox"/><span>全选/多选</span></li>
                 <li>商品名称</li>
                 <li>价格</li>
                 <li>数量</li>
@@ -140,7 +140,7 @@
 
 <script>
 export default {
-
+    
 }
 </script>
 
@@ -176,10 +176,38 @@ export default {
                 height: 64px;
                 line-height: 64px;
                 background: #fff;
+                position: relative;
                 li {
-                    float: left;
                     list-style: none;
-                    margin: 0 60px;
+                    position: absolute;
+                    font-weight: bold;
+                }
+                li:nth-child(1) {
+                    left: 50px;
+                    input {
+                        width: 25px;
+                        height: 25px;
+                        position: absolute;
+                        top: 20px;
+                    }
+                    span {
+                        margin-left: 40px;
+                    }
+                }
+                li:nth-child(2) {
+                    left: 350px;
+                }
+                li:nth-child(3) {
+                    left: 730px;
+                }
+                li:nth-child(4) {
+                    left: 1023px;
+                }
+                li:nth-child(5) {
+                    right: 400px;
+                }
+                li:nth-child(6) {
+                    right: 185px;
                 }
                 
             }
@@ -192,7 +220,6 @@ export default {
                     input {
                         width: 25px;
                         height: 25px;
-                        border: 1px solid red;    
                         background-color: #fff;
                         position: absolute;
                         left: 50px;
