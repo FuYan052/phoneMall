@@ -8,6 +8,7 @@ const ManagementSystem = () => import('@/pages/management/ManagementSystem')
 
 import Order from '@/components/management/order/Order'
 import Product from '@/components/management/product/Product'
+import User from '@/components/management/user/User'
 
 const routes = [{
     path: '/',
@@ -65,6 +66,12 @@ const routes = [{
         name: 'Product',
         components: {
             default: Product,
+        },
+    },{
+        path: 'user',
+        name: 'User',
+        components: {
+            default: User,
         },
     }]
 }];

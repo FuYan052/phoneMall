@@ -35,3 +35,7 @@ export const getHotSale = () => {
 export const getDetailImg = () => {
   return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/hot')
 }
+// 分类数据
+export const getList = () => {
+  return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/hot')
+}
