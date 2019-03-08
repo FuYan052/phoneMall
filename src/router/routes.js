@@ -4,6 +4,8 @@ const Detail = () => import('@/pages/Detail')
 const Login = () => import('@/pages/Login')
 const Register = () => import('@/pages/Register')
 const Cart = () => import('@/pages/Cart')
+const OrderDetail = () => import('@/pages/OrderDetail')
+const Mine = () => import('@/pages/Mine')
 const ManagementSystem = () => import('@/pages/management/ManagementSystem')
 
 import Order from '@/components/management/order/Order'
@@ -20,13 +22,13 @@ const routes = [{
         default: Home,
     }
 }, {
-    path: '/phonelist',
+    path: '/phonelist/:id',
     name: 'PhoneList',
     components: {
         default: PhoneList,
     }
 }, {
-    path: '/detail',
+    path: '/detail/:id',
     name: 'Detail',
     components: {
         default: Detail,
@@ -48,6 +50,18 @@ const routes = [{
     name: 'Cart',
     components: {
         default: Cart,
+    }
+}, {
+    path: '/order',
+    name: 'OrderDetail',
+    components: {
+        default: OrderDetail,
+    }
+}, {
+    path: '/mine',
+    name: 'Mine',
+    components: {
+        default: Mine,
     }
 }, {
     path: '/admin',

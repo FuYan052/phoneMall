@@ -91,6 +91,9 @@ export default {
       this.smallImg = list.slice(0,4);
       console.log(this.smallImg)
     });
+  },
+  mounted() {
+      
   }
 }
 </script>
@@ -105,7 +108,7 @@ export default {
         position: relative;
         box-sizing: border-box;
         .pic-wrap{
-            width: 700px;
+            width: 650px;
             height: 750px;
             // border: 1px solid rebeccapurple;
             margin-left: 100px;
@@ -142,7 +145,7 @@ export default {
         }
     
         .p-right{
-            width: 850px;
+            width: 700px;
             height: 900px;
             // border: 1px solid rebeccapurple;
             position: absolute;

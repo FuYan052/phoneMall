@@ -1,5 +1,11 @@
 <template>
   <div class="register">
+    <!-- <a-alert
+      message="注册成功！"
+      type="success"
+      showIcon
+      v-show="isSuccessed"
+    /> -->
     <div class="r-logo">
       <img src="https://accountstatic.vivo.com.cn/accountstatic.vivo.com.cn/static/img/logo.d68beda.png.webp">
     </div>
@@ -11,14 +17,33 @@
       <input class="inp inp-p" type="password" name="password" placeholder="请输入密码">
     </form>
 
-    <a class="r-register" href="javascript:void(0);">立即注册</a>
-    <a class="r-login" href="/html/login.html">登录</a>
+    <div class="r-register" @click="register">立即注册</div>
+    <div class="r-login" @click="toLogin">登录</div>
+
+    
   </div>
 </template>
 
 <script>
 export default {
-  name: "Register"
+  name: "Register",
+  data() {
+    return {
+      isSuccessed: false,
+    }
+  },
+  methods: {
+    register() {
+      // 如果注册成功
+      alert("注册成功！")
+    },
+    // 跳转到登录页
+    toLogin() {
+      this.$router.push({
+        path: '/login'
+      })
+    }
+  }
 };
 </script>
 
@@ -54,8 +79,7 @@ export default {
       margin-left: 47px;
     }
   }
-  a {
-    display: block;
+  div {
     width: 350px;
     height: 60px;
     margin-top: 35px;
@@ -64,6 +88,8 @@ export default {
     line-height: 60px;
     color: white;
     border-radius: 40px;
+    cursor: pointer;
+
   }
   .r-register {
     background: #3b9bfa;

@@ -4,11 +4,16 @@
             <h1>手机列表</h1>
         </div>
         <div class="wrapList">
-            <dl v-for="item in phoneList" :key="item.id"> 
+            <router-link 
+            v-for="item in phoneList" 
+            :key="item.id"
+            tag="dl" 
+            :to="`/detail/${item.id}`"
+            > 
                 <img :src="item.img" alt="">
                 <dt>{{item.title}}</dt>
                 <dd>￥{{item.price}}</dd>
-            </dl>
+            </router-link>
         </div>
         <div class="pages">
             <a-pagination 
@@ -73,7 +78,7 @@ export default {
         .wrapList {
             width: 85%;
             // height: 800px;
-            border: 1px solid peru;
+            // border: 1px solid peru;
             margin: 0 auto;
             margin-top: 20px;
             display: flex;
@@ -84,6 +89,8 @@ export default {
                 height: 500px;
                 margin-top: 15px;
                 background: #fff;
+                cursor: pointer;
+
                 img {
                     margin-top: 50px;
                     margin-left: 18%;

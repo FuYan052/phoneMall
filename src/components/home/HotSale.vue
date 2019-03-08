@@ -2,11 +2,16 @@
   <div class="hotSale">
     <div class="title">热卖专区</div>
     <div class="hotWrap">
-      <dl v-for="item in hotList" :key="item.id">
+      <router-link 
+      v-for="item in hotList" 
+      :key="item.id"
+      tag="dl" 
+      :to="`/detail/${item.id}`"
+      >
         <img :src="item.image">
         <dt>耳机原装正品入耳式</dt>
         <dd>￥{{item.price}}</dd>
-      </dl>
+      </router-link>
     </div>
   </div>
 </template>
@@ -55,6 +60,8 @@ export default {
         height: 500px;
         background: white;
         color: black;
+        cursor: pointer;
+
 
         dt {
             margin-top: -30px;
