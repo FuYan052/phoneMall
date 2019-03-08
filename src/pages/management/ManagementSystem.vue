@@ -35,6 +35,17 @@
               <a-menu-item key="4">Bill</a-menu-item>
               <a-menu-item key="5">Alex</a-menu-item>
             </a-sub-menu>
+            <a-sub-menu key="1111">
+              <span slot="title">
+                <a-icon type="user"/>
+                <router-link to="/admin/user" tag="span">
+              用户管理
+              </router-link>
+              </span>
+              <a-menu-item key="3">Tom</a-menu-item>
+              <a-menu-item key="4">Bill</a-menu-item>
+              <a-menu-item key="5">Alex</a-menu-item>
+            </a-sub-menu>
             <a-menu-item key="2">
               <a-icon type="desktop"/>
               <span>Option 2</span>

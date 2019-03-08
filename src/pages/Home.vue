@@ -10,7 +10,7 @@
         </a-layout-content>
         <a-layout-footer>
           <bottom-home></bottom-home>
-          </a-layout-footer>
+        </a-layout-footer>
       </a-layout>
     </div>
   </div>
