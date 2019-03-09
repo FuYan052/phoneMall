@@ -4,16 +4,6 @@
       <a-layout-header class="header">
         <div class="logo"/>
         <span class="phoneMallTitle">众尚机城后台管理系统</span>
-        <!-- <a-menu
-          theme="dark"
-          mode="horizontal"
-          :defaultSelectedKeys="['2']"
-          :style="{ lineHeight: '64px' }"
-        >
-          <a-menu-item key="1">nav 1</a-menu-item>
-          <a-menu-item key="2">nav 2</a-menu-item>
-          <a-menu-item key="3">nav 3</a-menu-item>
-        </a-menu> -->
       </a-layout-header>
       <a-layout>
         <a-layout-sider collapsible v-model="collapsed">
@@ -38,39 +28,13 @@
             <a-sub-menu key="1111">
               <span slot="title">
                 <a-icon type="user"/>
-                <router-link to="/admin/user" tag="span">
+                <router-link to="/admin/user/userlist" tag="span">
               用户管理
               </router-link>
               </span>
-              <a-menu-item key="3">Tom</a-menu-item>
-              <a-menu-item key="4">Bill</a-menu-item>
-              <a-menu-item key="5">Alex</a-menu-item>
+              <a-menu-item key="3">用户列表</a-menu-item>
+              <a-menu-item key="4">编辑用户</a-menu-item>
             </a-sub-menu>
-            <a-menu-item key="2">
-              <a-icon type="desktop"/>
-              <span>Option 2</span>
-            </a-menu-item>
-            <a-sub-menu key="sub1">
-              <span slot="title">
-                <a-icon type="user"/>
-                <span>User</span>
-              </span>
-              <a-menu-item key="3">Tom</a-menu-item>
-              <a-menu-item key="4">Bill</a-menu-item>
-              <a-menu-item key="5">Alex</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub2">
-              <span slot="title">
-                <a-icon type="team"/>
-                <span>Team</span>
-              </span>
-              <a-menu-item key="6">Team 1</a-menu-item>
-              <a-menu-item key="8">Team 2</a-menu-item>
-            </a-sub-menu>
-            <a-menu-item key="9">
-              <a-icon type="file"/>
-              <span>File</span>
-            </a-menu-item>
           </a-menu>
         </a-layout-sider>
         <a-layout style="padding: 0 24px 24px">

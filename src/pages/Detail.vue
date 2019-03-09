@@ -15,11 +15,11 @@
 			<!--右边的列表-->
 			<div class="p-right">
 				<div class="p_title">
-                    <span> 全面屏  4GB+64GB  玫瑰金</span>
-                    <p>面部识别，0.1s解锁</p>
+                    <span>VIVO x20 全面屏 玫瑰金</span>
+                    <p>{{theDetail[0].describe}}</p>
                 </div>
                 <div class="singlePrice">
-                    ￥1698
+                    ￥{{theDetail[0].price}}
                 </div>
 				<div class="product-version">
 					<div class="choice-v">选择版本</div>
@@ -67,8 +67,8 @@
 				<!--加入购物车部分-->
 				<div class="p-buy">
                     <p><span class="totalPrice">￥1698</span>   &nbsp;&nbsp;&nbsp;已选： 全网通版&nbsp; 3GB+64GB 金色&nbsp;&nbsp;  <span class="total-amount">1 </span>件</p>
-					<div class="add-tocart">加入购物车</div>
-					<div class="imm-buy">立即购买</div>
+					<div class="add-tocart" @click="addCart(theDetail[0].id)">加入购物车</div>
+					<div class="imm-buy" @click="toPay(theDetail[0].id)">立即购买</div>
 				</div>
 			</div>
 		</div>
@@ -80,20 +80,42 @@ export default {
     data() {
         return {
             midImg: '',
-            smallImg: []
+            smallImg: [],
+            theDetail:{}
         }
     },
     created() {
-    this.$http.getDetailImg().then(resp => {
-    //   console.log(resp);
-      const list = resp.data.res_body.list;
-      this.midImg = list[0].img;
-      this.smallImg = list.slice(0,4);
-      console.log(this.smallImg)
-    });
+        const _id = this.$route.query.id;
+        // 根据id获取对应商品详情
+        this.$http.getDetail(_id).then(resp => {
+        //   console.log(resp)
+          this.theDetail = resp.data.res_body.list
+          console.log(this.theDetail)
+        })
+        this.$http.getDetailImg().then(resp => {
+        //   console.log(resp);
+        const list = resp.data.res_body.list;
+        this.midImg = list[0].img;
+        this.smallImg = list.slice(0,4);
+        //   console.log(this.smallImg)
+        })
+    
   },
   mounted() {
       
+  },
+  methods: {
+      addCart(id) {
+        //   console.log(id)
+            alert("添加购物车成功! id为"+id);
+      },
+      toPay(id) {
+        //   console.log(id)
+        this.$router.push({
+            path: `/order/${id}`
+        })
+
+      }
   }
 }
 </script>
@@ -111,7 +133,6 @@ export default {
             width: 650px;
             height: 750px;
             // border: 1px solid rebeccapurple;
-            margin-left: 100px;
             position: relative;
             .p-m{
                 width: 400px;
@@ -299,6 +320,7 @@ export default {
                     border-radius: 40px;
                     background: #ff9536;
                     margin-top: 55px;
+                    cursor: pointer;
                 }
                 .imm-buy{
                     display: inline-block;
@@ -311,6 +333,8 @@ export default {
                     background: #f51200;
                     margin-top: 55px;
                     margin-left: 30px;
+                    cursor: pointer;
+
                 }
             }
         

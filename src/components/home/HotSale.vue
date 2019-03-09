@@ -29,7 +29,7 @@ export default {
       //   console.log(resp.data.data.items.list)
       const result = resp.data.data.items.list;
       this.hotList = result.slice(0, 3);
-      console.log(this.hotList);
+      // console.log(this.hotList);
     });
   }
 };

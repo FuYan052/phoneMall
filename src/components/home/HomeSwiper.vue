@@ -26,7 +26,7 @@ export default {
     // console.log(this.$http)
     this.$http.getBanners()
         .then(resp => {
-            console.log(resp)
+            // console.log(resp)
             this.swiperPic = resp.data.data.banners
             this.$nextTick().then(this.initSwiper)
         })

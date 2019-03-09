@@ -29,7 +29,7 @@ export default {
       //   console.log(resp.data.data.items.list)
       const result = resp.data.data.items.list;
       this.supremePhoneList = result.slice(0, 8);
-      console.log(this.supremePhoneList);
+      // console.log(this.supremePhoneList);
     });
   }
 };

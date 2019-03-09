@@ -4,9 +4,6 @@
 
     <div class="l-box">
       <div class="l-logo">
-        <img
-          src="https://accountstatic.vivo.com.cn/accountstatic.vivo.com.cn/static/img/logo.d68beda.png.webp"
-        >
       </div>
       <p>账号登录</p>
       <div class="alert" style="color: red; padding-left: 50px; display: none;">用户名或密码错误！</div>
@@ -43,7 +40,6 @@ export default {
 <style lang='scss' scoped>
 .login {
   width: 100%;
-  height: 750px;
   position: relative;
   img {
     width: 100%;
@@ -71,7 +67,7 @@ export default {
       text-align: center;
       height: 60px;
       line-height: 60px;
-      font-size: 18px;
+      font-size: 32px;
     }
     form {
       .inp {

@@ -1,15 +1,8 @@
 <template>
   <div class="register">
-    <!-- <a-alert
-      message="注册成功！"
-      type="success"
-      showIcon
-      v-show="isSuccessed"
-    /> -->
     <div class="r-logo">
-      <img src="https://accountstatic.vivo.com.cn/accountstatic.vivo.com.cn/static/img/logo.d68beda.png.webp">
     </div>
-    <p>账号注册</p>
+    <h1>账号注册</h1>
     <div class="alert" style="color: red; padding-left: 50px; display: none;">注册失败，请重试！</div>
     <form class="form-register">
       <input class="inp inp-n" type="text" name="phonenumber" placeholder="请输入手机号">
@@ -62,14 +55,14 @@ export default {
     img {
       width: 150px;
       height: 50px;
-      margin-left: 148px;
+      margin: 0 auto;
     }
   }
-  p {
+  h1 {
     text-align: center;
     height: 60px;
     line-height: 60px;
-    font-size: 18px;
+    font-size: 32px;
   }
   form {
     .inp {

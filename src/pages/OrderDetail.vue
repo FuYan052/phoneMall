@@ -4,7 +4,15 @@
 
 <script>
 export default {
-  name: 'OrderDetail'
+  name: 'OrderDetail',
+  data() {
+    return {
+
+    }
+  },
+  created() {
+    console.log(this.$route.params.id)
+  }
 }
 </script>
 
