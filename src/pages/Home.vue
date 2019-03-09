@@ -2,7 +2,9 @@
   <div class="home">
     <div id="components-layout-demo-basic">
       <a-layout>
-        <a-layout-header>Header</a-layout-header>
+        <a-layout-header>
+          <header-nav></header-nav>
+        </a-layout-header>
         <a-layout-content>
           <home-swiper></home-swiper>
           <hot-sale></hot-sale>
@@ -21,6 +23,7 @@ import HomeSwiper from "@/components/home/HomeSwiper";
 import HotSale from "@/components/home/HotSale";
 import SupremePhone from "@/components/home/SupremePhone";
 import BottomHome from "@/components/footer/BottomHome";
+import HeaderNav from "@/components/header/HeaderNav";
 
 export default {
   name: "Home",
@@ -28,7 +31,8 @@ export default {
     homeSwiper: HomeSwiper,
     HotSale: HotSale,
     SupremePhone:SupremePhone,
-    BottomHome:BottomHome
+    BottomHome:BottomHome,
+    HeaderNav:HeaderNav
   }
 };
 </script>

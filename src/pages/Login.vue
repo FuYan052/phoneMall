@@ -4,9 +4,6 @@
 
     <div class="l-box">
       <div class="l-logo">
-        <img
-          src="https://accountstatic.vivo.com.cn/accountstatic.vivo.com.cn/static/img/logo.d68beda.png.webp"
-        >
       </div>
       <p>账号登录</p>
       <div class="alert" style="color: red; padding-left: 50px; display: none;">用户名或密码错误！</div>
@@ -15,22 +12,34 @@
         <br>
         <input class="inp inp-p" type="password" name="password" placeholder="请输入密码">
       </form>
-      <a class="l-login" href="javascript:void(0);">登录</a>
-      <a class="l-register" href="/html/register.html">注册账号</a>
+      <div class="l-login" @click="login">登录</div>
+      <div class="l-register" @click="toRegister">注册账号</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Login"
+  name: "Login",
+  methods: {
+    login() {
+      // 如果登录成功则跳转个人中心页面
+      this.$router.push({
+        path: '/mine'
+      })
+    },
+    toRegister() {
+      this.$router.push({
+        path: '/register'
+      })
+    }
+  }
 };
 </script>
 
 <style lang='scss' scoped>
 .login {
   width: 100%;
-  height: 750px;
   position: relative;
   img {
     width: 100%;
@@ -58,7 +67,7 @@ export default {
       text-align: center;
       height: 60px;
       line-height: 60px;
-      font-size: 18px;
+      font-size: 32px;
     }
     form {
       .inp {
@@ -68,8 +77,7 @@ export default {
         margin-left: 47px;
       }
     }
-    a {
-      display: block;
+    div {
       width: 350px;
       height: 60px;
       margin-top: 35px;
@@ -78,6 +86,7 @@ export default {
       line-height: 60px;
       color: white;
       border-radius: 40px;
+      cursor: pointer;
     }
     .l-login {
       background: #3b9bfa;

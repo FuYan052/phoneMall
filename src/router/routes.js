@@ -4,11 +4,13 @@ const Detail = () => import('@/pages/Detail')
 const Login = () => import('@/pages/Login')
 const Register = () => import('@/pages/Register')
 const Cart = () => import('@/pages/Cart')
+const OrderDetail = () => import('@/pages/OrderDetail')
+const Mine = () => import('@/pages/Mine')
 const ManagementSystem = () => import('@/pages/management/ManagementSystem')
 
 import Order from '@/components/management/order/Order'
 import Product from '@/components/management/product/Product'
-import User from '@/components/management/user/User'
+import UserList from '@/components/management/user/UserList'
 
 const routes = [{
     path: '/',
@@ -20,13 +22,13 @@ const routes = [{
         default: Home,
     }
 }, {
-    path: '/phonelist',
+    path: '/phonelist/:id',
     name: 'PhoneList',
     components: {
         default: PhoneList,
     }
 }, {
-    path: '/detail',
+    path: '/detail/',
     name: 'Detail',
     components: {
         default: Detail,
@@ -50,6 +52,18 @@ const routes = [{
         default: Cart,
     }
 }, {
+    path: '/order/:id',
+    name: 'OrderDetail',
+    components: {
+        default: OrderDetail,
+    }
+}, {
+    path: '/mine',
+    name: 'Mine',
+    components: {
+        default: Mine,
+    }
+}, {
     path: '/admin',
     name: 'ManagementSystem',
     components: {
@@ -69,10 +83,14 @@ const routes = [{
         },
     },{
         path: 'user',
-        name: 'User',
-        components: {
-            default: User,
-        },
+        redirect: '/user/userlist',
+        children: [{
+            path: '/user/userlist',
+            name: 'UserList',
+            components: {
+                default: UserList,
+            },
+        }]
     }]
 }];
 

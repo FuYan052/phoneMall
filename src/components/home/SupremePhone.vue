@@ -2,11 +2,16 @@
   <div class="supremePhone">
     <div class="title">精品手机</div>
     <div class="hotWrap">
-      <dl v-for="item in supremePhoneList" :key="item.id">
+      <router-link 
+      v-for="item in supremePhoneList" 
+      :key="item.id"
+      tag="dl" 
+      :to="`/detail/${item.id}`"
+      >
         <img :src="item.image">
         <dt>耳机原装正品入耳式</dt>
         <dd>￥{{item.price}}</dd>
-      </dl>
+      </router-link>
     </div>
   </div>
 </template>
@@ -24,7 +29,7 @@ export default {
       //   console.log(resp.data.data.items.list)
       const result = resp.data.data.items.list;
       this.supremePhoneList = result.slice(0, 8);
-      console.log(this.supremePhoneList);
+      // console.log(this.supremePhoneList);
     });
   }
 };
@@ -57,6 +62,8 @@ export default {
         height: 320px;
         background: white;
         color: black;
+        cursor: pointer;
+
 
         dt {
             margin-top: -30px;

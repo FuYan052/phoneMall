@@ -35,7 +35,15 @@ export const getHotSale = () => {
 export const getDetailImg = () => {
   return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/hot')
 }
-// 分类数据
+// 分类列表
 export const getList = () => {
   return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/hot')
+}
+// 获取分类（导航）
+export const getNav = () => {
+  return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/category')
+}
+// 获取详情
+export const getDetail = (id) => {
+  return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/detail?id'+id)
 }

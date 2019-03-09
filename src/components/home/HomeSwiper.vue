@@ -26,7 +26,7 @@ export default {
     // console.log(this.$http)
     this.$http.getBanners()
         .then(resp => {
-            console.log(resp)
+            // console.log(resp)
             this.swiperPic = resp.data.data.banners
             this.$nextTick().then(this.initSwiper)
         })
@@ -80,7 +80,7 @@ export default {
       height: 550px;
 
       img{
-        width: 100%;
+        width: 75%;
         height: 550px;
       }
     }
