@@ -3,10 +3,11 @@
         <div class="wrapNav">
             <h1>手机列表</h1>
         </div>
+        <!-- 这里换成渲染currentList -->
         <div class="wrapList">
             <router-link
             tag="dl"
-            v-for="item in phoneList" 
+            v-for="item in currentList" 
             :key="item.id"
             :to="{
                 path: `/detail`,
@@ -43,18 +44,21 @@ export default {
     data() {
         return {
             phoneList: [],
+            currentList: [],    //当前页数据列表
             listLength: null,
             pageSize: 12,
             current:1,
-            pagination: {
-                pageSize: 12,
-            },
         }
     },
     methods: {
-        
         onChange(pageNumber) {
+            this.current = pageNumber;  // 当前页改变
             console.log('Page: ', pageNumber);
+            // 当前页起始下标及结束下标
+            const start = (this.current - 1) * this.pageSize;
+            const end = start + this.pageSize;
+            // 当前页数据列表
+            this.currentList = this.phoneList.slice(start, end)
         },
     },
        
@@ -62,8 +66,10 @@ export default {
         this.$http.getList().then(resp => {
             // console.log(resp)
             this.phoneList = resp.data.res_body.list
+            // 第一次进入是当前页数据列表
+            this.currentList = this.phoneList.slice(0, 12)
+            console.log(this.currentList)
             this.listLength = this.phoneList.length
-            // console.log(typeof(this.listLength))
         });
 
     }

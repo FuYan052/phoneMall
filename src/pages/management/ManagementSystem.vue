@@ -28,12 +28,12 @@
             <a-sub-menu key="1111">
               <span slot="title">
                 <a-icon type="user"/>
-                <router-link to="/admin/user/userlist" tag="span">
+                <router-link to="/admin/userlist" tag="span">
               用户管理
               </router-link>
               </span>
-              <a-menu-item key="3">用户列表</a-menu-item>
-              <a-menu-item key="4">编辑用户</a-menu-item>
+              <a-menu-item key="3" @click="openList">用户列表</a-menu-item>
+              <a-menu-item key="4" @click="openEdit">编辑用户</a-menu-item>
             </a-sub-menu>
           </a-menu>
         </a-layout-sider>
@@ -62,7 +62,19 @@ export default {
       collapsed: false
     };
   },
-  created() {}
+  created() {},
+  methods: {
+    openList() {
+      this.$router.push({
+        path: '/admin/userlist'
+      })
+    },
+    openEdit() {
+      this.$router.push({
+        path: '/admin/useredit'
+      })
+    }
+  }
 };
 </script>
 
