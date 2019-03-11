@@ -11,7 +11,6 @@
                 </div>
             </div>
         </div>
-			
 			<!--右边的列表-->
 			<div class="p-right">
 				<div class="p_title">

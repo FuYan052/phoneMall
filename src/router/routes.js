@@ -11,6 +11,7 @@ const ManagementSystem = () => import('@/pages/management/ManagementSystem')
 import Order from '@/components/management/order/Order'
 import Product from '@/components/management/product/Product'
 import UserList from '@/components/management/user/UserList'
+import UserEdit from '@/components/management/user/UserEdit'
 
 const routes = [{
     path: '/',
@@ -28,7 +29,7 @@ const routes = [{
         default: PhoneList,
     }
 }, {
-    path: '/detail/',
+    path: '/detail/:id',
     name: 'Detail',
     components: {
         default: Detail,
@@ -82,15 +83,17 @@ const routes = [{
             default: Product,
         },
     },{
-        path: 'user',
-        redirect: '/user/userlist',
-        children: [{
-            path: '/user/userlist',
-            name: 'UserList',
-            components: {
-                default: UserList,
-            },
-        }]
+        path: 'userlist',
+        name: 'UserList',
+        components: {
+            default: UserList,
+        },
+    },{
+        path: 'useredit',
+        name: 'UserEdit',
+        components: {
+            default: UserEdit,
+        },
     }]
 }];
 

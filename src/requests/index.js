@@ -47,3 +47,7 @@ export const getNav = () => {
 export const getDetail = (id) => {
   return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/detail?id'+id)
 }
+// 获取用户列表
+export const getUserList = () => {
+  return ajax.post('http://rap2api.taobao.org/app/mock/124859/api/user/userlist')
+}
