@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import RegionPicker from 'vue-region-picker'
+import REGION_DATA from 'china-area-data'
+
 
 import App from './App'
 import router from './router'
@@ -12,6 +15,10 @@ Vue.use(Antd)
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = $http;
+Vue.use(RegionPicker, {
+  region: REGION_DATA
+})
+
 
 /* eslint-disable no-new */
 new Vue({
