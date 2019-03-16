@@ -53,7 +53,7 @@ const routes = [{
         default: Cart,
     }
 }, {
-    path: '/order/:id',
+    path: '/order',
     name: 'OrderDetail',
     components: {
         default: OrderDetail,

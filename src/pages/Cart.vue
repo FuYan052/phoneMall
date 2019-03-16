@@ -2,7 +2,13 @@
     <div class="cart">
         <div class="title">
             <span class="titleName">我的购物车</span>
-            <span class="goToMall">继续购物 ></span>
+            <router-link 
+            tag="span"
+            :to="{
+                path: `/home`,
+               }"
+            class="goToMall">继续购物 >
+            </router-link>
         </div>
         <div class="content">
             <ul class="tab-header">
@@ -128,9 +134,15 @@
                 </div>
                 <div class="calculate">
                     已选商品<span class="count"> 2 </span>件, 合计：<span class="totalPrice">￥2397.00</span>
-                    <div class="btn_toPay">
+                    <router-link 
+                    class="btn_toPay"
+                    tag="div"
+                    :to="{
+                        path: `/order`,
+                       }"
+                    >
                     去结算
-                    </div>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -165,6 +177,8 @@ export default {
             }
             .goToMall {
                 float: right;
+                margin-right: 30px;
+                cursor: pointer;
             }
         }
         .content {
@@ -257,7 +271,6 @@ export default {
                             color: #686868;
                             line-height: 30px;
                         }
-
                     }
                     .itemPrice {
                         width: 165px;
@@ -353,6 +366,7 @@ export default {
                         position: absolute;
                         right: 20px;
                         top: 32%;
+                        cursor: pointer;
                         }
                     }
                     

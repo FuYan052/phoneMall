@@ -111,7 +111,7 @@ export default {
       toPay(id) {
         //   console.log(id)
         this.$router.push({
-            path: `/order/${id}`
+            path: `/order`
         })
 
       }
