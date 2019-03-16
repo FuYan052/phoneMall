@@ -29,7 +29,7 @@ const routes = [{
         default: PhoneList,
     }
 }, {
-    path: '/detail/:id',
+    path: '/detail/',
     name: 'Detail',
     components: {
         default: Detail,

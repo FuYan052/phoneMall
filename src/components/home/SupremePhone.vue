@@ -6,7 +6,11 @@
       v-for="item in supremePhoneList" 
       :key="item.id"
       tag="dl" 
-      :to="`/detail/${item.id}`"
+      :to="{
+                path: `/detail`,
+                query: {
+                    id:item.id
+                }}"
       >
         <img :src="item.image">
         <dt>耳机原装正品入耳式</dt>
