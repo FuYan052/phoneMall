@@ -1,96 +1,217 @@
 <template>
   <div class="register">
-    <div class="r-logo">
-    </div>
-    <h1>账号注册</h1>
-    <div class="alert" style="color: red; padding-left: 50px; display: none;">注册失败，请重试！</div>
-    <form class="form-register">
-      <input class="inp inp-n" type="text" name="phonenumber" placeholder="请输入手机号">
-      <br>
-      <input class="inp inp-p" type="password" name="password" placeholder="请输入密码">
-    </form>
-
-    <div class="r-register" @click="register">立即注册</div>
-    <div class="r-login" @click="toLogin">登录</div>
-
-    
+    <header-nav></header-nav>
+     <a-form
+    :form="form"
+    @submit="handleSubmit"
+  >
+    <a-form-item
+      v-bind="formItemLayout"
+      label="用户名"
+    >
+      <a-input
+        v-decorator="[
+          'username',
+          {
+            rules: [{
+              type: 'string', message: '请输入正确的用户名!',
+            }, {
+              required: true, message: '请输入用户名!',
+            }]
+          }
+        ]"
+      />
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
+      label="密码"
+    >
+      <a-input
+        v-decorator="[
+          'password',
+          {
+            rules: [{
+              required: true, message: '请输入密码!',
+            }, {
+              validator: validateToNextPassword,
+            }],
+          }
+        ]"
+        type="password"
+      />
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
+      label="确认密码"
+    >
+      <a-input
+        v-decorator="[
+          'repassword',
+          {
+            rules: [{
+              required: true, message: '请再次输入密码!',
+            }, {
+              validator: compareToFirstPassword,
+            }],
+          }
+        ]"
+        type="password"
+        @blur="handleConfirmBlur"
+      />
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
+      label="手机号码"
+    >
+      <a-input
+        v-decorator="[
+          'phone',
+          {
+            rules: [{
+              type: 'string', len: 11, message: '必须是11位的手机号码!'
+            }, {
+              required: true, message: '请输入手机号码!',
+            }]
+          }
+        ]"
+      >
+      </a-input>
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
+      label="住址"
+    >
+      <a-input
+        v-decorator="[
+          'address',
+          {
+            rules: [{
+              required: true, message: '请输入住址!',
+            }]
+          }
+        ]"
+      />
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
+      label="验证码"
+    >
+      <a-row :gutter="8">
+        <a-col :span="12">
+          <a-input
+            v-decorator="[
+              'captcha',
+              {rules: [{ required: true, message: '请输入验证码!' }]}
+            ]"
+          />
+        </a-col>
+        <a-col :span="12">
+          <!-- <a-button>获取验证码</a-button> -->
+          <check-code></check-code>
+        </a-col>
+      </a-row>
+    </a-form-item>
+    <a-form-item v-bind="tailFormItemLayout">
+      <a-checkbox
+        v-decorator="['agreement', {valuePropName: 'checked'}]"
+      >
+        我已阅读 <a href="">
+          用户协议
+        </a>
+      </a-checkbox>
+    </a-form-item>
+    <a-form-item v-bind="tailFormItemLayout">
+      <a-button
+        type="primary"
+        html-type="submit"
+      >
+        立即注册
+      </a-button>
+    </a-form-item>
+  </a-form>
   </div>
+  
 </template>
 
 <script>
+import CkeckCode from "@/components/checkcode/CkeckCode"
+import HeaderNav from "@/components/header/HeaderNav";
+
+
 export default {
   name: "Register",
-  data() {
+  components: {
+    CkeckCode:CkeckCode,
+    HeaderNav:HeaderNav
+  },
+  data () {
     return {
-      isSuccessed: false,
-    }
+      confirmDirty: false,
+      autoCompleteResult: [],
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+      },
+      tailFormItemLayout: {
+        wrapperCol: {
+          xs: {
+            span: 24,
+            offset: 0,
+          },
+          sm: {
+            span: 16,
+            offset: 8,
+          },
+        },
+      },
+    };
+  },
+  beforeCreate () {
+    this.form = this.$form.createForm(this);
   },
   methods: {
-    register() {
-      // 如果注册成功
-      alert("注册成功！")
+    handleSubmit  (e) {
+      e.preventDefault();
+      this.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          console.log('Received values of form: ', values);
+        }
+      });
     },
-    // 跳转到登录页
-    toLogin() {
-      this.$router.push({
-        path: '/login'
-      })
-    }
-  }
+    handleConfirmBlur  (e) {
+      const value = e.target.value;
+      this.confirmDirty = this.confirmDirty || !!value;
+    },
+    compareToFirstPassword  (rule, value, callback) {
+      const form = this.form;
+      if (value && value !== form.getFieldValue('password')) {
+        callback('两次密码输入不一致!');
+      } else {
+        callback();
+      }
+    },
+    validateToNextPassword  (rule, value, callback) {
+      const form = this.form;
+      if (value && this.confirmDirty) {
+        form.validateFields(['repassword'], { force: true });
+      }
+      callback();
+    },
+  },
 };
 </script>
 
 <style lang='scss' scoped>
 .register {
-  width: 450px;
-  height: 600px;
-  background: white;
-  z-index: 10;
-  margin: 70px auto;
-  overflow: hidden;
-  .r-logo {
-    width: 450px;
-    height: 60px;
-    margin-top: 20px;
-    img {
-      width: 150px;
-      height: 50px;
-      margin: 0 auto;
-    }
-  }
-  h1 {
-    text-align: center;
-    height: 60px;
-    line-height: 60px;
-    font-size: 32px;
-  }
-  form {
-    .inp {
-      width: 350px;
-      height: 60px;
-      margin-top: 35px;
-      margin-left: 47px;
-    }
-  }
-  div {
-    width: 350px;
-    height: 60px;
-    margin-top: 35px;
-    margin-left: 47px;
-    text-align: center;
-    line-height: 60px;
-    color: white;
-    border-radius: 40px;
-    cursor: pointer;
-
-  }
-  .r-register {
-    background: #3b9bfa;
-  }
-  .r-login {
-    border: 1px solid #3b9bfa;
-    color: #3b9bfa;
-  }
+  width: 500px;
+  height: 800px;
+  margin: 200px auto;
 }
 </style>
 
