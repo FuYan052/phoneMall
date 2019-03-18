@@ -11,8 +11,8 @@
             </router-link>
         </ul>
         
-        <p class="username">
-            欢迎您：张三
+        <p class="username" v-show="isLogin">
+            欢迎您：{{user}} &nbsp;&nbsp;&nbsp; <span class="logout" @click="handleLogout">退出登录</span>
         </p>
         <a-dropdown>
             <a-icon class="user" type="user" />
@@ -47,6 +47,11 @@
 </template>
 
 <script>
+import {
+  mapState,
+  mapGetters,
+  mapMutations
+} from 'vuex'
 export default {
     name: 'HeaderNav',
     data() {
@@ -55,8 +60,18 @@ export default {
             placements: 'bottomRight',
         }    
     },
+    computed: {
+        ...mapState(['user']),
+        ...mapState(['isLogin'])
+    },
     methods: {
-      
+        ...mapMutations(['logout']),
+        handleLogout() {
+            console.log("退出登录")
+            window.sessionStorage.removeItem('user')
+            this.logout()
+
+        }
     },
        
     created() {
@@ -98,8 +113,11 @@ export default {
             color: white;
             position: absolute;
             line-height: 60px;
-            right: 12%;
+            right: 6%;
             top: 0;
+            .logout {
+                cursor: pointer;
+            }
         }
         // #menu-item {
         //     height: 70px;

@@ -71,17 +71,17 @@ export default {
 <style lang='scss' scoped>
 .swiper-container {
   width: 100%;
-  height: 550px;
+  height: 900px;
   position: relative;
 
   .swiper-wrapper {
     .swiper-slide {
       width: 100%;
-      height: 550px;
+      height: 900px;
 
       img{
-        width: 75%;
-        height: 550px;
+        width: 100%;
+        height: 900px;
       }
     }
   }

@@ -47,7 +47,7 @@ export default {
   justify-content: space-between;
 }
 #components-layout-demo-basic .ant-layout-header{
-  background: #474745;
+  background: #7197ef;
   color: #fff;
 }
 #components-layout-demo-basic .ant-layout-footer {

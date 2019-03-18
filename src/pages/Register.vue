@@ -1,6 +1,5 @@
 <template>
   <div class="register">
-    <header-nav></header-nav>
      <a-form
     :form="form"
     @submit="handleSubmit"
@@ -170,6 +169,12 @@ export default {
           },
         },
       },
+      params:{
+        user_name:'',
+        password: '',
+        phone_num: '',
+        address: '',
+      }
     };
   },
   beforeCreate () {
@@ -180,7 +185,22 @@ export default {
       e.preventDefault();
       this.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
+          this.params.user_name = values.username
+          this.params.password = values.password
+          this.params.phone_num = values.phone
+          this.params.address = values.address
           console.log('Received values of form: ', values);
+          console.log(this.params)
+          // 注册
+          this.$http.getRegister(this.params)
+          .then(resp => {
+              console.log(resp)
+
+            if(resp.status === 201){
+              console.log(resp)
+              alert("注册成功!")
+            }
+          })
         }
       });
     },

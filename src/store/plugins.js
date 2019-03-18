@@ -3,7 +3,7 @@ const syncStorage = store => {
   store.subscribe((mutation, state) => {
     // 每次 mutation 之后调用
     // mutation 的格式为 { type, payload }
-    window.localStorage.setItem('rzg-cart', JSON.stringify(state.cart))
+    // window.localStorage.setItem('rzg-cart', JSON.stringify(state.cart))
   })
 }
 

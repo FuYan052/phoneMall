@@ -72,6 +72,7 @@ export default {
 
 <style lang='scss' scoped>
 #footer {
+  margin-top: 30px;
   color:black;
 	a {
   color:black;

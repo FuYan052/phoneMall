@@ -9,7 +9,7 @@
       <a-form-item>
         <a-input
           v-decorator="[
-          'userName',
+          'username',
           { rules: [{ required: true, message: 'Please input your username!' }] }
         ]"
           placeholder="用户名"
@@ -40,27 +40,62 @@
         ]"
         >记住我</a-checkbox>
         <a-button type="primary" html-type="submit" class="login-form-button">登录</a-button>
-        <span 
-        id="toRegister"
-        @click="toRegister"
-        >立即注册</span>
+        <span id="toRegister" @click="toRegister">立即注册</span>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "Login",
+  data() {
+    return {
+      username: "",
+      password: ""
+    };
+  },
   beforeCreate() {
     this.form = this.$form.createForm(this);
   },
+  computed: {
+    ...mapState(["isLogin"]),
+    ...mapState(["user"])
+  },
+  // watch: {
+  //   isLogin () {
+  //     // 当isLogin为true的时候，执行跳转
+  //     const {
+  //       from = '/home'
+  //     } = this.$route.params
+  //     this.$router.push(from)
+  //   }
+  // },
   methods: {
+    ...mapMutations(["changeLoginStatus"]),
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
+          this.username = values.username;
+          this.password = values.password;
           console.log("Received values of form: ", values);
+          console.log(this.username);
+          const params = { username: this.username, password: this.password };
+          console.log(params);
+
+          // 登录接口
+          this.$http.getLogin(params).then(resp => {
+            console.log(resp);
+            if (resp.data.code === 10002) {
+              window.sessionStorage.setItem("user", resp.data.username);
+              // window.sessionStorage.setItem('token', resp.data.data.token)
+              this.changeLoginStatus();
+              alert("登录成功！");
+              this.$router.push("/home");
+            }
+          });
         }
       });
     },
