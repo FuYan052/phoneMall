@@ -12,16 +12,22 @@
         </div>
         <div class="content">
             <ul class="tab-header">
-                <li><input type="checkbox"/><span>全选/多选</span></li>
+                <li><a-checkbox 
+                :indeterminate="indeterminate"
+                @change="onCheckAllChange"
+                :checked="checkAll">多选/全选</a-checkbox></li>
                 <li>商品名称</li>
                 <li>价格</li>
                 <li>数量</li>
                 <li>小计（元）</li>
                 <li>操作</li>
             </ul>
-            <div class="cartItem">
+            <div class="cartItem"
+                v-for="(item,index) in cart"
+                :key="index"
+            >
                 <form action="">
-                    <input type="checkbox" name="" id="">
+                    <a-checkbox class="checkBox" ref="{{index}}" @change="onChange"></a-checkbox>
                     <div class="itemPic">
                         <img src="../assets/logo.png" alt="">
                     </div>
@@ -30,105 +36,33 @@
                             VIVO X20  4GB+64GB
                         </span>
                         <span class="itemColor">
-                            颜色：玫瑰金
+                            颜色：{{item.color}}
                         </span>
                     </div>
                     <div class="itemPrice">
-                        1598.00
+                        {{item.price}}
                     </div>
                     <div class="itenCount">
-                        <div class="dec">
+                        <div class="dec" @click="handledec(item,index)">
                             -
                         </div>
                         <div class="count">
-                            1
+                            {{item.count}}
                         </div>
-                        <div class="add">
+                        <div class="add" @click="handleAdd(item,index)">
                             +
                         </div>
                     </div>
                     <div class="totalprice">
-                        1598.00
+                        {{item.totalPrice}}
                     </div>
                     <div class="handle">
-                        <a-button type="danger" icon="delete" ghost>删除</a-button>
-                    </div>
-                </form>
-            </div>
-            <div class="cartItem">
-                <form action="">
-                    <input type="checkbox" name="" id="">
-                    <div class="itemPic">
-                        <img src="../assets/logo.png" alt="">
-                    </div>
-                    <div class="itemTitle">
-                        <span class="itemVersion">
-                            VIVO X20  4GB+64GB
-                        </span>
-                        <span class="itemColor">
-                            颜色：玫瑰金
-                        </span>
-                    </div>
-                    <div class="itemPrice">
-                        1598.00
-                    </div>
-                    <div class="itenCount">
-                        <div class="dec">
-                            -
-                        </div>
-                        <div class="count">
-                            1
-                        </div>
-                        <div class="add">
-                            +
-                        </div>
-                    </div>
-                    <div class="totalprice">
-                        1598.00
-                    </div>
-                    <div class="handle">
-                        <a-button type="danger" icon="delete" ghost>删除</a-button>
-                    </div>
-                </form>
-            </div>
-            <div class="cartItem">
-                <form action="">
-                    <input type="checkbox" name="" id="">
-                    <div class="itemPic">
-                        <img src="../assets/logo.png" alt="">
-                    </div>
-                    <div class="itemTitle">
-                        <span class="itemVersion">
-                            VIVO X20  4GB+64GB
-                        </span>
-                        <span class="itemColor">
-                            颜色：玫瑰金
-                        </span>
-                    </div>
-                    <div class="itemPrice">
-                        1598.00
-                    </div>
-                    <div class="itenCount">
-                        <div class="dec">
-                            -
-                        </div>
-                        <div class="count">
-                            1
-                        </div>
-                        <div class="add">
-                            +
-                        </div>
-                    </div>
-                    <div class="totalprice">
-                        1598.00
-                    </div>
-                    <div class="handle">
-                        <a-button type="danger" icon="delete" ghost>删除</a-button>
+                        <a-button type="danger" icon="delete" ghost @click="handleDelete(item,index)">删除</a-button>
                     </div>
                 </form>
             </div>
             <div class="toPay">
-                <input type="checkbox"><span class="checkAll">全选</span>
+                <a-checkbox class="checkBox" @change="onChange">全选</a-checkbox>
                 <div class="delAll">
                     删除选中商品
                 </div>
@@ -151,8 +85,69 @@
 </template>
 
 <script>
+// const plainOptions = [this.$refs]
 export default {
-    
+    name: 'Cart',
+    data() {
+        return {
+            cart: [],
+            count: '',
+            color: '',
+            price: '',
+            indeterminate: true,
+            checkAll: false,
+            plainOptions: [],
+        }
+    },
+    created() {
+        this.cart = JSON.parse(window.sessionStorage.cart)
+        console.log(this.cart)
+        // this.count = this.cart[0].count
+        // this.color = this.cart[0].color
+        // this.price = this.cart[0].price
+    },
+    mounted() {
+        this.plainOptions = this.$refs.checked
+    },
+    methods: {
+        //   数量加按钮
+        handleAdd(item,index) {
+            item.count++;
+            if (item.count > 5) 
+                item.count = 5;
+            item.totalPrice = item.price * item.count
+            window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+        },
+        //   数量减按钮
+        handledec(item,index) {
+            item.count--;
+            if (item.count < 1) 
+                item.count = 1;
+            item.totalPrice = item.price * item.count
+            window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+        },
+        // 删除单项
+        handleDelete(item,index) {
+            console.log(item,index)
+            this.cart = this.cart.filter((delItem,_index) => _index !== index)
+            window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+        },
+        // 复选框按钮
+        onChange (checkedList) {
+            this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
+            this.checkAll = checkedList.length === plainOptions.length
+        },
+        // 全选按钮
+        onCheckAllChange (e) {
+            // this.plainOptions = this.$refs.checked
+            console.log(this.$refs)
+            Object.assign(this, {
+                checkedList: e.target.checked ? plainOptions : [],
+                indeterminate: false,
+                checkAll: e.target.checked,
+            })
+        },
+    }
 }
 </script>
 
@@ -198,7 +193,7 @@ export default {
                 }
                 li:nth-child(1) {
                     left: 50px;
-                    input {
+                    .checkBox {
                         width: 25px;
                         height: 25px;
                         position: absolute;
@@ -231,7 +226,7 @@ export default {
                 background: #fff;
                 position: relative;
                 form {
-                    input {
+                    .checkBox {
                         width: 25px;
                         height: 25px;
                         background-color: #fff;
@@ -294,6 +289,7 @@ export default {
                             line-height: 40px;
                             text-align: center;
                             float: left;
+                            cursor: pointer;
                         }
                         .count {
                             width: 50px;
@@ -321,10 +317,9 @@ export default {
                 background: #fff;
                 margin-top: 25px;
                 position: relative;
-                    input {
-                        width: 25px;
+                    .checkBox {
+                        width: 100px;
                         height: 25px;
-                        border: 1px solid red;    
                         background-color: #fff;
                         position: absolute;
                         left: 50px;

@@ -121,8 +121,8 @@
     </div>
     <div class="toPay">
       <p>应付总额：<span>￥2397.00</span><br />
-         收件人：<br />
-         收货地址：多吃蔬菜fascinating我的方法爱车大V啊发财树DCW发热无服务
+         收件人：张三<br />
+         收货地址：云南玉溪红塔区
       </p>
       <div class="btn-toPay">
         提交订单

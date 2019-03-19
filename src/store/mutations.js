@@ -72,6 +72,8 @@ export default {
   // 退出登录
   logout (state) {
     window.sessionStorage.removeItem('user');
+    window.sessionStorage.removeItem('user_id');
+    window.sessionStorage.removeItem('cart');
     state.user = ''
     state.isLogin = false
   }

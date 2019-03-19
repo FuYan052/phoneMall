@@ -15,26 +15,32 @@
       <!--右边的列表-->
       <div class="p-right">
         <div class="p_title">
-          <span>VIVO x20 全面屏 玫瑰金</span>
-          <p>{{theDetail[0].describe}}</p>
+          <span>{{product_name}}</span>
+          <p>{{describe}}</p>
         </div>
-        <div class="singlePrice">￥{{theDetail[0].price}}</div>
+        <div class="singlePrice">￥{{singlePrice}}</div>
         <div class="product-version">
           <div class="choice-v">选择版本</div>
-          <div class="p-version" @click="choicVersion($event)">
-            <div class="choice-version">全网通 2GB+32GB</div>
-            <div class="choice-version">全网通 4GB+64GB</div>
-            <div class="choice-version">全网通 6GB+128GB</div>
+          <div class="p-version">
+            <div 
+            v-for="(item,index) in version" 
+            :key="index" 
+            @click="choicVersion(item,index)" 
+            class="choice-version"
+            :class="{'activeVersion':activeVersionIndex === index}"
+            >{{item}}</div>
           </div>
         </div>
         <div class="product-color">
           <div class="choice">选择颜色</div>
           <div class="p-color">
-            <div class="choice-color">金色</div>
-            <div class="choice-color">玫瑰金</div>
-            <div class="choice-color">磨砂黑</div>
-            <div class="choice-color">银色</div>
-            <div class="choice-color">极光蓝</div>
+            <div 
+            class="choice-color" 
+            v-for="(item,index) in color" 
+            :key="index"
+            @click="choicColor(item,index)"
+            :class="{'activeColor':activeColorIndex === index}"
+            >{{item}}</div>
           </div>
         </div>
         <div class="product-count">
@@ -45,6 +51,7 @@
             <input type="button" name class="up" @click="handleAdd" value="+">
           </div>
           <p>(限购 5 部)</p>
+          <img src="../assets/cart.jpg" @click="toCart" alt="">
         </div>
         <!--加入购物车部分-->
         <div class="p-buy">
@@ -63,7 +70,9 @@
 
 <script>
 import BottomHome from "@/components/footer/BottomHome";
-
+import {
+  mapState,
+} from 'vuex'
 export default {
   name: "Detail",
   components: {
@@ -75,7 +84,16 @@ export default {
       smallImg: [],
       theDetail: {},
       version: '',
+      currentVersion: '',
+      activeVersionIndex: '',
+      currentColor: '',
+      activeColorIndex: '',
       color: '',
+      product_name: '',
+      describe: '',
+      cart: [],
+      cartItem: {},
+      singlePrice: '',
       count: 1
     };
   },
@@ -85,7 +103,12 @@ export default {
     this.$http.getDetail(_id).then(resp => {
       //   console.log(resp)
       this.theDetail = resp.data.res_body.list;
-      // console.log(this.theDetail)
+      this.version = this.theDetail[0].version
+      this.color = this.theDetail[0].color
+      this.product_name = this.theDetail[0].title
+      this.describe = this.theDetail[0].describe
+      this.singlePrice = this.theDetail[0].price
+      console.log(this.theDetail)
     });
     this.$http.getDetailImg().then(resp => {
       //   console.log(resp);
@@ -96,19 +119,23 @@ export default {
     });
   },
   computed: {
-    singlePrice: function() {
-      return this.theDetail[0].price;
-    },
+      ...mapState(['user']),
     totalPrice: function() {
       return this.singlePrice * this.count;
-    }
+    },
   },
   methods: {
     //   选择版本
-    choicVersion(e) {
-        console.log(e)
-        this.version = e.target.innerText
-        console.log(this.version)
+    choicVersion(item,index) {
+        console.log(item,index)
+        this.currentVersion = item
+        this.activeVersionIndex = index
+    },
+    // 选择颜色
+    choicColor(item,index) {
+        console.log(item,index)
+        this.currentColor = item
+        this.activeColorIndex = index
     },
     //   数量加按钮
     handleAdd() {
@@ -121,9 +148,63 @@ export default {
       if (this.count < 1) this.count = 1;
     },
     addCart(id) {
-      //   console.log(id)
-      alert("添加购物车成功! id为" + id);
+        // console.log(id)
+        // console.log(window.sessionStorage.user)
+        const isLogin = Boolean(window.sessionStorage.user)
+        const user_id = window.sessionStorage.user_id
+        console.log(window.sessionStorage.cart)
+        this.cart = JSON.parse(window.sessionStorage.cart) || []
+        console.log(this.cart )
+        const isInCart = this.cart.some(cartItem => cartItem.product_id === id)
+
+        if(this.currentVersion === '' || this.currentColor === '')
+          return alert("请选择版本和颜色")
+
+        // 遍历购物车，如果没有则push新的，如果已有则数量增加
+        const currentCartItem = {
+
+        }
+        
+        if (isInCart) {
+          this.cart = this.cart.map(cartItem => {
+            if (cartItem.product_id === id) {
+              cartItem.count += this.count
+            }
+            return cartItem
+          })
+        } else {
+          this.cart.push({
+            user_id: user_id,
+            product_id: id,
+            product_name: this.product_name,
+            color: this.currentColor,
+            version: this.currentVersion,
+            count: this.count,
+            totalPrice: this.totalPrice,
+            price: this.singlePrice
+          })
+        }
+
+        console.log(this.cart)
+
+        if(isLogin && this.currentVersion !== '' && this.currentColor !== ''){
+            window.sessionStorage.setItem("cart", JSON.stringify(this.cart));
+            alert("添加购物车成功! id为" + id);
+        } else {
+            alert("请先登录！")
+            this.$router.push({
+                path: '/login'
+            })
+        }
+      
     },
+    // 跳转购物车
+    toCart () {
+      this.$router.push({
+        path: `/cart`
+      })
+    },
+
     toPay(id) {
       //   console.log(id)
       this.$router.push({
@@ -243,6 +324,9 @@ export default {
             font-size: 14px;
             cursor: pointer;
           }
+          .activeVersion {
+            border: 1px solid red;
+          }
         }
       }
       .product-color {
@@ -270,6 +354,10 @@ export default {
             margin-top: 25px;
             text-align: center;
             font-size: 14px;
+            cursor: pointer;
+          }
+          .activeColor {
+            border: 1px solid #7197ef;
           }
         }
       }
@@ -312,6 +400,14 @@ export default {
           position: absolute;
           left: 190px;
           top: 53px;
+        }
+        img {
+          width: 80px;
+          height: 80px;
+          position: absolute;
+          bottom: 20px;
+          right: 50px;
+          cursor: pointer;
         }
       }
 

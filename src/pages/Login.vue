@@ -86,16 +86,28 @@ export default {
           console.log(params);
 
           // 登录接口
+          // this.$http.getLogin(params).then(resp => {
+          //   console.log(resp);
+          //   if (resp.data.code === 10002) {
+          //     window.sessionStorage.setItem("user", resp.data.username);
+          //     // window.sessionStorage.setItem('token', resp.data.data.token)
+          //     this.changeLoginStatus();
+          //     alert("登录成功！");
+          //     this.$router.push("/home");
+          //   }
+          // });
+
+          // 登录假接口
           this.$http.getLogin(params).then(resp => {
             console.log(resp);
-            if (resp.data.code === 10002) {
-              window.sessionStorage.setItem("user", resp.data.username);
-              // window.sessionStorage.setItem('token', resp.data.data.token)
+            if (resp.data.code === 200) {
+              window.sessionStorage.setItem("user", resp.data.data.username);
+              window.sessionStorage.setItem("user_id", resp.data.data.user_id);
               this.changeLoginStatus();
               alert("登录成功！");
               this.$router.push("/home");
             }
-          });
+          })
         }
       });
     },
