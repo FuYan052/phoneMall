@@ -1,37 +1,126 @@
 <template>
   <div class="login">
-    <img src="https://usrsyswsdl.vivo.com.cn/usermng/1551443967258.jpg">
-
-    <div class="l-box">
-      <div class="l-logo">
-      </div>
-      <p>账号登录</p>
-      <div class="alert" style="color: red; padding-left: 50px; display: none;">用户名或密码错误！</div>
-      <form class="form-login">
-        <input class="inp inp-n" type="text" name="phonenumber" placeholder="请输入手机号">
-        <br>
-        <input class="inp inp-p" type="password" name="password" placeholder="请输入密码">
-      </form>
-      <div class="l-login" @click="login">登录</div>
-      <div class="l-register" @click="toRegister">注册账号</div>
-    </div>
+    <a-form
+      id="components-form-demo-normal-login"
+      :form="form"
+      class="login-form"
+      @submit="handleSubmit"
+    >
+      <a-form-item>
+        <a-input
+          v-decorator="[
+          'username',
+          { rules: [{ required: true, message: 'Please input your username!' }] }
+        ]"
+          placeholder="用户名"
+        >
+          <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-input
+          v-decorator="[
+          'password',
+          { rules: [{ required: true, message: 'Please input your Password!' }] }
+        ]"
+          type="password"
+          placeholder="密码"
+        >
+          <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-checkbox
+          v-decorator="[
+          'remember',
+          {
+            valuePropName: 'checked',
+            initialValue: true,
+          }
+        ]"
+        >记住我</a-checkbox>
+        <a-button type="primary" html-type="submit" class="login-form-button">登录</a-button>
+        <span id="toRegister" @click="toRegister">立即注册</span>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "Login",
+  data() {
+    return {
+      username: "",
+      password: ""
+    };
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this);
+  },
+  computed: {
+    ...mapState(["isLogin"]),
+    ...mapState(["user"])
+  },
+  // watch: {
+  //   isLogin () {
+  //     // 当isLogin为true的时候，执行跳转
+  //     const {
+  //       from = '/home'
+  //     } = this.$route.params
+  //     this.$router.push(from)
+  //   }
+  // },
   methods: {
-    login() {
-      // 如果登录成功则跳转个人中心页面
-      this.$router.push({
-        path: '/mine'
-      })
+    ...mapMutations(["changeLoginStatus"]),
+    handleSubmit(e) {
+      e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          this.username = values.username;
+          this.password = values.password;
+          console.log("Received values of form: ", values);
+          console.log(this.username);
+          const params = { username: this.username, password: this.password };
+          console.log(params);
+
+          // 登录接口
+          // this.$http.getLogin(params).then(resp => {
+          //   console.log(resp);
+          //   if (resp.data.code === 10002) {
+          //     window.sessionStorage.setItem("user", resp.data.username);
+          //     // window.sessionStorage.setItem('token', resp.data.data.token)
+          //     this.changeLoginStatus();
+          //     alert("登录成功！");
+          //     this.$router.push("/home");
+          //   }
+          // });
+
+          // 登录假接口
+          this.$http.getLogin(params).then(resp => {
+            console.log(resp);
+            if (resp.data.code === 200) {
+              window.sessionStorage.setItem("user", resp.data.data.username);
+              window.sessionStorage.setItem("user_id", resp.data.data.user_id);
+              this.changeLoginStatus();
+              alert("登录成功！");
+              this.$router.push("/home");
+            }
+          })
+        }
+      });
     },
+    // login() {
+    //   // 如果登录成功则跳转个人中心页面
+    //   this.$router.push({
+    //     path: '/mine'
+    //   })
+    // },
     toRegister() {
       this.$router.push({
-        path: '/register'
-      })
+        path: "/register"
+      });
     }
   }
 };
@@ -39,62 +128,22 @@ export default {
 
 <style lang='scss' scoped>
 .login {
-  width: 100%;
-  position: relative;
-  img {
-    width: 100%;
-    height: 100%;
+  width: 400px;
+  height: 500px;
+  margin: 200px auto;
+  #components-form-demo-normal-login .login-form {
+    max-width: 300px;
   }
-  .l-box {
-    width: 450px;
-    height: 600px;
-    background: white;
-    z-index: 10;
-    position: absolute;
-    top: 70px;
-    right: 120px;
-    .l-logo {
-      width: 450px;
-      height: 60px;
-      margin-top: 20px;
-      img {
-        width: 150px;
-        height: 50px;
-        margin-left: 148px;
-      }
-    }
-    p {
-      text-align: center;
-      height: 60px;
-      line-height: 60px;
-      font-size: 32px;
-    }
-    form {
-      .inp {
-        width: 350px;
-        height: 60px;
-        margin-top: 35px;
-        margin-left: 47px;
-      }
-    }
-    div {
-      width: 350px;
-      height: 60px;
-      margin-top: 35px;
-      margin-left: 47px;
-      text-align: center;
-      line-height: 60px;
-      color: white;
-      border-radius: 40px;
-      cursor: pointer;
-    }
-    .l-login {
-      background: #3b9bfa;
-    }
-    .l-register {
-      border: 1px solid #3b9bfa;
-      color: #3b9bfa;
-    }
+  #components-form-demo-normal-login .login-form-forgot {
+    float: right;
+  }
+  #components-form-demo-normal-login .login-form-button {
+    width: 100%;
+  }
+  #toRegister {
+    color: #1890ff;
+    font-weight: bold;
+    cursor: pointer;
   }
 }
 </style>

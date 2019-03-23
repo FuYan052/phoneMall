@@ -49,5 +49,22 @@ export const getDetail = (id) => {
 }
 // 获取用户列表
 export const getUserList = () => {
-  return ajax.post('http://rap2api.taobao.org/app/mock/124859/api/user/userlist')
+  return ajax.get('http://120.78.53.181:8000/api/users/')
+}
+// 编辑用户
+export const saveUser = (id,params) => {
+  return ajax.post('http://120.78.53.181:8000/api/users/'+id, params)
+}
+// 登录
+// export const getLogin = (params) => {
+//   return ajax.post('http://120.78.53.181:8000/api/login/', params)
+// }
+
+// 登录假接口
+export const getLogin = (params) => {
+  return ajax.post('http://rap2api.taobao.org/app/mock/120117/api/login', params)
+}
+// 注册
+export const getRegister = (params) => {
+  return ajax.post('http://120.78.53.181:8000/api/users/', params)
 }
