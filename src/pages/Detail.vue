@@ -82,13 +82,13 @@ export default {
     return {
       midImg: "",
       smallImg: [],
-      theDetail: {},
-      version: '',
+      theDetail: '',
+      version: [],
       currentVersion: '',
       activeVersionIndex: '',
       currentColor: '',
       activeColorIndex: '',
-      color: '',
+      color: [],
       product_name: '',
       describe: '',
       cart: [],
@@ -100,23 +100,24 @@ export default {
   created() {
     const _id = this.$route.query.id;
     // 根据id获取对应商品详情
-    this.$http.getDetail(_id).then(resp => {
-      //   console.log(resp)
-      this.theDetail = resp.data.res_body.list;
-      this.version = this.theDetail[0].version
-      this.color = this.theDetail[0].color
-      this.product_name = this.theDetail[0].title
-      this.describe = this.theDetail[0].describe
-      this.singlePrice = this.theDetail[0].price
+    this.$http.getProById(_id).then(resp => {
+        console.log(resp)
+      this.theDetail = resp.data;
+      this.version = this.theDetail.version.versionName
+      this.color = this.theDetail.colors.colorName
+      this.product_name = this.theDetail.productName
+      this.describe = this.theDetail.productDescribe
+      this.midImg = this.theDetail.imgUrl
+      this.singlePrice = this.theDetail.productSize
       console.log(this.theDetail)
     });
-    this.$http.getDetailImg().then(resp => {
-      //   console.log(resp);
-      const list = resp.data.res_body.list;
-      this.midImg = list[0].img;
-      this.smallImg = list.slice(0, 4);
-      //   console.log(this.smallImg)
-    });
+    // this.$http.getDetailImg().then(resp => {
+    //   //   console.log(resp);
+    //   const list = resp.data.res_body.list;
+    //   this.midImg = list[0].img;
+    //   this.smallImg = list.slice(0, 4);
+    //   //   console.log(this.smallImg)
+    // });
   },
   computed: {
       ...mapState(['user']),
@@ -124,6 +125,7 @@ export default {
       return this.singlePrice * this.count;
     },
   },
+  
   methods: {
     //   选择版本
     choicVersion(item,index) {
@@ -152,17 +154,22 @@ export default {
         // console.log(window.sessionStorage.user)
         const isLogin = Boolean(window.sessionStorage.user)
         const user_id = window.sessionStorage.user_id
-        console.log(window.sessionStorage.cart)
-        this.cart = JSON.parse(window.sessionStorage.cart) || []
+        const isCart = Boolean(window.sessionStorage.cart)
+
+        if(isCart) {
+          this.cart = JSON.parse(window.sessionStorage.cart)
+        }else{
+          this.cart = []
+        }
+
+        // console.log(JSON.parse(window.sessionStorage.cart))
+        // this.cart = JSON.parse(window.sessionStorage.cart) || []
         console.log(this.cart )
         const isInCart = this.cart.some(cartItem => cartItem.product_id === id)
-
         if(this.currentVersion === '' || this.currentColor === '')
           return alert("请选择版本和颜色")
-
         // 遍历购物车，如果没有则push新的，如果已有则数量增加
         const currentCartItem = {
-
         }
         
         if (isInCart) {
@@ -184,9 +191,7 @@ export default {
             price: this.singlePrice
           })
         }
-
         console.log(this.cart)
-
         if(isLogin && this.currentVersion !== '' && this.currentColor !== ''){
             window.sessionStorage.setItem("cart", JSON.stringify(this.cart));
             alert("添加购物车成功! id为" + id);
@@ -204,7 +209,6 @@ export default {
         path: `/cart`
       })
     },
-
     toPay(id) {
       //   console.log(id)
       this.$router.push({
@@ -220,7 +224,6 @@ export default {
   width: 100%;
   height: 100%;
   background: #f4f4f1;
-
   .detail {
     width: 93%;
     height: 1000px;
@@ -264,7 +267,6 @@ export default {
         }
       }
     }
-
     .p-right {
       width: 950px;
       height: 900px;
@@ -410,7 +412,6 @@ export default {
           cursor: pointer;
         }
       }
-
       .p-buy {
         width: 600px;
         height: 200px;

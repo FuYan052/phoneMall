@@ -25,7 +25,7 @@ const ajax = axios.create()
 
 // 获取轮播图
 export const getBanners = () => {
-  return ajax.get('http://www.xiongmaoyouxuan.com/api/tab/1?start=0')
+  return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/banner')
 }
 // 热卖专区
 export const getHotSale = () => {
@@ -57,14 +57,41 @@ export const saveUser = (id,params) => {
 }
 // 登录
 // export const getLogin = (params) => {
-//   return ajax.post('http://120.78.53.181:8000/api/login/', params)
-// }
+//   return ajax.post('http://http://192.168.137.45:8001/phone/login?'+params)
+// } 
+export const getLogin = (params) => {
+  return ajax.get(encodeURI(`http://192.168.43.204:8001/phone/login?username=${params.username}&password=${params.password}`))
+} 
 
 // 登录假接口
-export const getLogin = (params) => {
-  return ajax.post('http://rap2api.taobao.org/app/mock/120117/api/login', params)
-}
+// export const getLogin = (params) => {
+//   return ajax.post('http://rap2api.taobao.org/app/mock/120117/api/login', params)
+// }
 // 注册
 export const getRegister = (params) => {
-  return ajax.post('http://120.78.53.181:8000/api/users/', params)
+  return ajax.post('http://192.168.43.204:8001/phone/addUser/', params)
+}
+// export const getRegister = (params) => {
+//   return ajax.post('http://120.78.53.181:8000/api/users/', params)
+// }
+
+// 保存收货地址
+export const saveAddress = (params) => {
+  return ajax.post('http://192.168.43.204:8001/phone/ra/addAddress', params)
+}
+// 根据用户id获取收货地址
+export const getAddress = (params) => {
+  return ajax.post(`http://192.168.43.204:8001/phone/ra/getAllAddress?userId=${params}`)
+}
+// 根据用户id获取收货地址
+export const getBannerImg = () => {
+  return ajax.get('http://192.168.43.204:8001/phone/getAllPro')
+}
+// 获取所有商品
+export const getAllPro = () => {
+  return ajax.get('http://192.168.43.204:8001/phone/getAllPro')
+} 
+// 根据id获取商品详情
+export const getProById = (id) => {
+  return ajax.get('http://192.168.43.204:8001/phone/getProById/?proId='+id)
 }

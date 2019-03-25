@@ -93,6 +93,12 @@
     </a-form-item>
     <a-form-item
       v-bind="formItemLayout"
+      label="注册时间"
+    >
+      <a-date-picker v-decorator="['createAt', config]" />
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
       label="验证码"
     >
       <a-row :gutter="8">
@@ -170,10 +176,11 @@ export default {
         },
       },
       params:{
-        user_name:'',
+        userName:'',
         password: '',
-        phone_num: '',
+        phoneNum: '',
         address: '',
+        createAt: '',
       }
     };
   },
@@ -185,20 +192,24 @@ export default {
       e.preventDefault();
       this.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          this.params.user_name = values.username
+          this.params.userName = values.username
           this.params.password = values.password
-          this.params.phone_num = values.phone
+          this.params.phoneNum = values.phone
           this.params.address = values.address
+          this.params.createAt = values.createAt
+
           console.log('Received values of form: ', values);
           console.log(this.params)
           // 注册
           this.$http.getRegister(this.params)
           .then(resp => {
               console.log(resp)
-
-            if(resp.status === 201){
+            if(resp.status === 200){
               console.log(resp)
               alert("注册成功!")
+              this.$router.push({
+                path: '/login'
+              })
             }
           })
         }

@@ -9,7 +9,8 @@ const Mine = () => import('@/pages/Mine')
 const ManagementSystem = () => import('@/pages/management/ManagementSystem')
 
 import Order from '@/components/management/order/Order'
-import Product from '@/components/management/product/Product'
+import ProductList from '@/components/management/product/ProductList'
+import ProductEdit from '@/components/management/product/ProductEdit'
 import UserList from '@/components/management/user/UserList'
 import UserEdit from '@/components/management/user/UserEdit'
 
@@ -77,12 +78,6 @@ const routes = [{
             default: Order,
         },
     },{
-        path: 'product',
-        name: 'Product',
-        components: {
-            default: Product,
-        },
-    },{
         path: 'userlist',
         name: 'UserList',
         components: {
@@ -93,6 +88,18 @@ const routes = [{
         name: 'UserEdit',
         components: {
             default: UserEdit,
+        },
+    },{
+        path: 'productlist',
+        name: 'ProductList',
+        components: {
+            default: ProductList,
+        },
+    },{
+        path: 'productedit',
+        name: 'ProductEdit',
+        components: {
+            default: ProductEdit,
         },
     }]
 }];

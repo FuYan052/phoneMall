@@ -82,32 +82,40 @@ export default {
           this.password = values.password;
           console.log("Received values of form: ", values);
           console.log(this.username);
-          const params = { username: this.username, password: this.password };
+          const params = {username:this.username,password:this.password}
+          // const params = '';
+          // const params1 = '';
+          // const params2 = '';
+          // params1 = "username"=this.username
+          // params2 = "password"=this.password
+          // params = params1 +'&'+ params2
+          // params = JSON.parse()
           console.log(params);
 
           // 登录接口
-          // this.$http.getLogin(params).then(resp => {
-          //   console.log(resp);
-          //   if (resp.data.code === 10002) {
-          //     window.sessionStorage.setItem("user", resp.data.username);
-          //     // window.sessionStorage.setItem('token', resp.data.data.token)
-          //     this.changeLoginStatus();
-          //     alert("登录成功！");
-          //     this.$router.push("/home");
-          //   }
-          // });
-
-          // 登录假接口
           this.$http.getLogin(params).then(resp => {
             console.log(resp);
-            if (resp.data.code === 200) {
-              window.sessionStorage.setItem("user", resp.data.data.username);
-              window.sessionStorage.setItem("user_id", resp.data.data.user_id);
+            if (resp.status === 200) {
+              window.sessionStorage.setItem("user", resp.data.userName);
+              window.sessionStorage.setItem("user_id", resp.data.userId);
+              // window.sessionStorage.setItem('token', resp.data.data.token)
               this.changeLoginStatus();
               alert("登录成功！");
               this.$router.push("/home");
             }
-          })
+          });
+
+          // 登录假接口
+          // this.$http.getLogin(params).then(resp => {
+          //   console.log(resp);
+          //   if (resp.data.code === 200) {
+          //     window.sessionStorage.setItem("user", resp.data.data.username);
+          //     window.sessionStorage.setItem("user_id", resp.data.data.user_id);
+          //     this.changeLoginStatus();
+          //     alert("登录成功！");
+          //     this.$router.push("/home");
+          //   }
+          // })
         }
       });
     },

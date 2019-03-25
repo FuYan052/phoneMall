@@ -5,17 +5,27 @@
     </div>
     <div class="address">
       <h4>收货人信息</h4>
+      <!-- 已有收获地址 -->
+      <div class="hasAddress" v-for="item in allAddress" :key="item.receiveAdressId">
+        <p><span>收货人：</span>{{item.receiver}}</p>
+        <p><span>联系电话：</span>{{item.signerMobile}}</p>
+        <p><span>详细地址：</span>{{item.province}}{{item.city}}{{item.district}}{{item.address}}</p>
+      </div>
+      <!-- 新建收获地址 -->
       <div class="toAdd">
         <a-icon class="addIcon" @click="showModal" type="plus-circle" />
         <p>添加新地址</p>
         <!-- 添加地址模态框 -->
         <a-modal
           title="新建收获地址"
-          v-model="visible"
-          :footer="null"       >
-        <a-form
+          :visible="visible"
+          @ok="handleOk"
+          :confirmLoading="confirmLoading"
+          @cancel="handleCancel"
+        >
+          <a-form
           :form="form"
-          @submit="handleSubmit"
+          
         >
           <a-form-item
             label="收货人"
@@ -24,19 +34,19 @@
           >
             <a-input
               v-decorator="[
-                '收货人',
+                'receiver',
                 {rules: [{ required: true, message: '请输入收货人姓名!' }]}
               ]"
             />
           </a-form-item>
           <a-form-item
-            label="手机号码"
+            label="联系电话"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 25 }"
           >
             <a-input
               v-decorator="[
-                '手机号码',
+                'signerMobile',
                 {rules: [{ required: true, message: '请输入联系电话!' }]}
               ]"
             />
@@ -60,20 +70,10 @@
           >
             <a-input
               v-decorator="[
-                '详细地址',
+                'address',
                 {rules: [{ required: true, message: '请输入详细地址!' }]}
               ]"
             />
-          </a-form-item>
-          <a-form-item
-            :wrapper-col="{ span: 12, offset: 13 }"
-          >
-            <a-button
-              type="primary"
-              html-type="submit"
-            >
-              保存
-            </a-button>
           </a-form-item>
         </a-form>
         </a-modal>
@@ -146,23 +146,119 @@ export default {
       form: this.$form.createForm(this),
       province: '广东', // you can set initial value or not.
       city: 440100, // by code or name.
-      district: ''
+      district: '',
+      address: '',
+      receiver: '',
+      signerMobile: '',
+      visible: false,
+      confirmLoading: false,
+      allAddress: []
     }
   },
   components: { 
     RegionPicker,
     BottomHome,
-     },
+  },
   methods: {
     showModal() {
-      this.visible = true
+      const isLogin = Boolean(window.sessionStorage.user)
+      if(isLogin){
+        this.visible = true
+      } else {
+        alert("请先登录！")
+      }
+        
     },
-    change() {
+    // handleSubmit (e) {
+    //   // e.preventDefault();
+    //   this.form.validateFields((err, values) => {
+    //     if (!err) {
+    //       console.log('Received values of form: ', values);
+    //     }
+    //   });
+    // },
 
-    }
-  },
+    // 选择城市
+    change(e) {
+      console.log(e)
+      this.province = e.province
+      this.city = e.city
+      this.district = e.district
+    },
+
+    handleOk(e) {
+      const user_id = window.sessionStorage.user_id
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log('Received values of form: ', values);
+          this.receiver = values.receiver
+          this.signerMobile = values.signerMobile
+          this.address = values.address
+        }
+      });
+      const params = {
+        userId: user_id,
+        receiver: this.receiver,
+        province: this.province,
+        city: this.city,
+        district: this.district,
+        address: this.address,
+        signerMobile: this.signerMobile,
+        allAddress: []
+      }
+      // console.log(params)
+
+      // 调保存接口
+      this.$http.saveAddress(params).then(resp => {
+        console.log(resp)
+      })
+      // this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.visible = false;
+        this.confirmLoading = false;
+      }, 2000);
+
+      // this.fetchAllAddress()
+      // const user_id = window.sessionStorage.user_id
+      this.$http.getAddress(user_id).then(resp => {
+        console.log(resp)
+        if(resp.status === 200) {
+          this.allAddress = resp.data 
+          console.log(this.allAddress)
+        }
+      })
+    },
+
+    handleCancel(e) {
+      console.log('Clicked cancel button');
+      this.visible = false
+    },
+    // 获取该用户所有地址
+    // fetchAllAddress() {
+    //   console.log("ok")
+    //   const user_id = window.sessionStorage.user_id
+    //   this.$http.getAddress(user_id).then(resp => {
+    //     console.log(resp)
+    //     if(resp.status === 200) {
+    //       this.allAddress = resp.data 
+    //       console.log(this.allAddress)
+    //     }
+    //   })
+    // },
   created() {
-    console.log(this.$route.params.id)
+    // console.log(this.$route.params.id)
+    // this.fetchAllAddress()
+    const user_id = window.sessionStorage.user_id
+      this.$http.getAddress(user_id).then(resp => {
+        console.log("ok")
+        console.log(resp)
+        if(resp.status === 200) {
+          this.allAddress = resp.data 
+          console.log(this.allAddress)
+        }
+      })
+    }
   }
 }
 </script>
@@ -192,16 +288,33 @@ export default {
         font-size: 18px;
         color: #333333;
       }
-      .toAdd {
-        width: 260px;
-        height: 150px;
+      .hasAddress {
+        width: 300px;
+        height: 180px;
+        padding: 10px;
+        float: left;
         border: 1px solid #ccc;
         margin-top: 30px;
+        margin-left: 20px;
+        p {
+          line-height: 40px;
+          span {
+            font-weight: bold;
+          }
+        }
+      }
+      .toAdd {
+        width: 300px;
+        height: 180px;
+        float: left;
+        border: 1px solid #ccc;
+        margin-top: 30px;
+        margin-left: 20px;
         position: relative;
         .addIcon {
           position: absolute;
           top: 45px;
-          left: 115px;
+          left: 130px;
           font-size: 32px;
         }
         p {

@@ -8,16 +8,16 @@
             <router-link
             tag="dl"
             v-for="item in currentList" 
-            :key="item.id"
+            :key="item.productId"
             :to="{
                 path: `/detail`,
                 query: {
-                    id:item.id
+                    id:item.productId
                 }}"
             > 
-                <img :src="item.img" alt="">
-                <dt>{{item.title}}</dt>
-                <dd>￥{{item.price}}</dd>
+                <img :src="item.imgUrl" alt="">
+                <dt>{{item.productName}}</dt>
+                <dd>￥{{item.productSize}}</dd>
             </router-link>
         </div>
         <div class="pages">
@@ -48,6 +48,12 @@ export default {
             listLength: null,
             pageSize: 12,
             current:1,
+            vivo: [],
+            oppo: [],
+            huawei: [],
+            meizu: [],
+            xiaomi: [],
+            sanxing: [],
         }
     },
     methods: {
@@ -63,14 +69,52 @@ export default {
     },
        
     created() {
-        this.$http.getList().then(resp => {
-            // console.log(resp)
-            this.phoneList = resp.data.res_body.list
+        //  console.log(this.$route)
+        //  const brandId = this.$route.params.id
+        //  console.log(brandId)
+
+        // this.$http.getList().then(resp => {
+        //     // console.log(resp)
+        //     this.phoneList = resp.data.res_body.list
+        //     // 第一次进入是当前页数据列表
+        //     this.currentList = this.phoneList.slice(0, 12)
+        //     console.log(this.currentList)
+        //     this.listLength = this.phoneList.length
+        // });
+
+        // 获取所有商品
+        this.$http.getAllPro().then(resp => {
+            const brandId = this.$route.params.id
+            console.log(resp)
+            const result = resp.data
+            this.vivo = result.filter(item => item.brandId == 'V_202')
+            this.huawei = result.filter(item => item.brandId == 'H_101')
+            this.oppo = result.filter(item => item.brandId == 'O_303')
+            this.meizu = result.filter(item => item.brandId == 'M_505')
+            this.xiaomi = result.filter(item => item.brandId == 'X_404')
+            this.sanxing = result.filter(item => item.brandId == 'S_606')
+            
+            if (brandId == 1001)
+                this.phoneList = this.huawei
+            if (brandId == 1002)
+                this.phoneList = this.vivo
+            if (brandId == 1003)
+                this.phoneList = this.oppo
+            if (brandId == 1004)
+                this.phoneList = this.meizu
+            if (brandId == 1005)
+                this.phoneList = this.xiaomi
+            if (brandId == 1006)
+                this.phoneList = this.sanxing
+
+            // this.phoneList = resp.data.res_body.list
             // 第一次进入是当前页数据列表
             this.currentList = this.phoneList.slice(0, 12)
             console.log(this.currentList)
             this.listLength = this.phoneList.length
-        });
+
+            console.log(this.phoneList)
+        })
 
     }
 }

@@ -17,13 +17,12 @@
             <a-sub-menu key="sub9">
               <span slot="title">
                 <a-icon type="user"/>
-                <router-link to="/admin/product" tag="span">
+                <router-link to="/admin/order" tag="span">
               商品管理
               </router-link>
               </span>
-              <a-menu-item key="3">Tom</a-menu-item>
-              <a-menu-item key="4">Bill</a-menu-item>
-              <a-menu-item key="5">Alex</a-menu-item>
+              <a-menu-item key="3" @click="openProductList">商品列表</a-menu-item>
+              <a-menu-item key="4" @click="openProductEdit">编辑商品</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="1111">
               <span slot="title">
@@ -64,6 +63,7 @@ export default {
   },
   created() {},
   methods: {
+    // 用户管理
     openList() {
       this.$router.push({
         path: '/admin/userlist'
@@ -73,7 +73,18 @@ export default {
       this.$router.push({
         path: '/admin/useredit'
       })
-    }
+    },
+    // 商品管理
+    openProductList() {
+      this.$router.push({
+        path: '/admin/productlist'
+      })
+    },
+    openProductEdit() {
+      this.$router.push({
+        path: '/admin/productedit'
+      })
+    },
   }
 };
 </script>
