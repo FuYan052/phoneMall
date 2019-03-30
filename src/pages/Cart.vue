@@ -13,9 +13,8 @@
         <div class="content">
             <ul class="tab-header">
                 <li><a-checkbox 
-                :indeterminate="indeterminate"
                 @change="onCheckAllChange"
-                :checked="checkAll">多选/全选</a-checkbox></li>
+                >多选/全选</a-checkbox></li>
                 <li>商品名称</li>
                 <li>价格</li>
                 <li>数量</li>
@@ -27,16 +26,16 @@
                 :key="index"
             >
                 <form action="">
-                    <a-checkbox class="checkBox" ref="{{index}}" @change="onChange"></a-checkbox>
+                    <a-checkbox class="checkBox" ref="checkedItem" @change="onChange" :checked="itemchecked"></a-checkbox>
                     <div class="itemPic">
-                        <img src="../assets/logo.png" alt="">
+                        <img :src="item.imgPath1" alt="">
                     </div>
                     <div class="itemTitle">
                         <span class="itemVersion">
-                            VIVO X20  4GB+64GB
+                            {{item.productName}}  {{item.versionName}}
                         </span>
                         <span class="itemColor">
-                            颜色：{{item.color}}
+                            颜色：{{item.colorName}}
                         </span>
                     </div>
                     <div class="itemPrice">
@@ -47,14 +46,14 @@
                             -
                         </div>
                         <div class="count">
-                            {{item.count}}
+                            {{item.buyNum}}
                         </div>
                         <div class="add" @click="handleAdd(item,index)">
                             +
                         </div>
                     </div>
                     <div class="totalprice">
-                        {{item.totalPrice}}
+                        {{item.buyNum * item.price}}
                     </div>
                     <div class="handle">
                         <a-button type="danger" icon="delete" ghost @click="handleDelete(item,index)">删除</a-button>
@@ -73,7 +72,7 @@
                     tag="div"
                     :to="{
                         path: `/order`,
-                       }"
+                    }"
                     >
                     去结算
                     </router-link>
@@ -85,7 +84,7 @@
 </template>
 
 <script>
-// const plainOptions = [this.$refs]
+const plainOptions = [0,1,2]
 export default {
     name: 'Cart',
     data() {
@@ -94,36 +93,42 @@ export default {
             count: '',
             color: '',
             price: '',
-            indeterminate: true,
+            // indeterminate: true,
             checkAll: false,
-            plainOptions: [],
+            itemchecked: false,
+            plainOptions,
         }
     },
     created() {
-        this.cart = JSON.parse(window.sessionStorage.cart)
-        console.log(this.cart)
-        // this.count = this.cart[0].count
-        // this.color = this.cart[0].color
-        // this.price = this.cart[0].price
+        // this.cart = JSON.parse(window.sessionStorage.cart)
+        // console.log(this.cart)
+        const userId = window.sessionStorage.user_id
+        this.$http.getCarts(userId).then(resp => {
+            console.log(resp)
+            this.cart = resp.data
+            console.log(this.cart)
+        })
+
+        
     },
     mounted() {
-        this.plainOptions = this.$refs.checked
+        // this.plainOptions = this.$refs.checked
     },
     methods: {
         //   数量加按钮
         handleAdd(item,index) {
-            item.count++;
-            if (item.count > 5) 
-                item.count = 5;
-            item.totalPrice = item.price * item.count
+            item.buyNum++;
+            if (item.buyNum > 5) 
+                item.buyNum = 5;
+            item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
         },
         //   数量减按钮
         handledec(item,index) {
-            item.count--;
-            if (item.count < 1) 
-                item.count = 1;
-            item.totalPrice = item.price * item.count
+            item.buyNum--;
+            if (item.buyNum < 1) 
+                item.buyNum = 1;
+            item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
         },
         // 删除单项
@@ -139,13 +144,12 @@ export default {
         },
         // 全选按钮
         onCheckAllChange (e) {
-            // this.plainOptions = this.$refs.checked
-            console.log(this.$refs)
-            Object.assign(this, {
-                checkedList: e.target.checked ? plainOptions : [],
-                indeterminate: false,
-                checkAll: e.target.checked,
-            })
+            console.log(e)
+            // this.checkAll = !this.checkAll
+            console.log(this.checkAll)
+            // if(this.checkAll){
+            //     this.itemchecked = true
+            // }
         },
     }
 }

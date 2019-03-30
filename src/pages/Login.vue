@@ -101,7 +101,11 @@ export default {
               // window.sessionStorage.setItem('token', resp.data.data.token)
               this.changeLoginStatus();
               alert("登录成功！");
-              this.$router.push("/home");
+              if(resp.data.userName === 'admin'){
+                this.$router.push("/admin")
+              }else{
+                this.$router.push("/home");
+              }
             }
           });
 

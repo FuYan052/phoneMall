@@ -4,13 +4,13 @@
       <div class="pic-wrap">
         <!--手机大图-->
         <div class="p-m">
-          <img :src="midImg" alt>
+          <img :src="currentColorImg" alt>
         </div>
-        <div class="smallImg">
+        <!-- <div class="smallImg">
           <div class="itemSmallImg" v-for="item in smallImg" :key="item.id">
             <img :src="item.img" alt>
           </div>
-        </div>
+        </div> -->
       </div>
       <!--右边的列表-->
       <div class="p-right">
@@ -28,7 +28,7 @@
             @click="choicVersion(item,index)" 
             class="choice-version"
             :class="{'activeVersion':activeVersionIndex === index}"
-            >{{item}}</div>
+            >{{item.versionName}}</div>
           </div>
         </div>
         <div class="product-color">
@@ -40,7 +40,7 @@
             :key="index"
             @click="choicColor(item,index)"
             :class="{'activeColor':activeColorIndex === index}"
-            >{{item}}</div>
+            >{{item.colorName}}</div>
           </div>
         </div>
         <div class="product-count">
@@ -59,7 +59,7 @@
             <span class="totalPrice">￥{{totalPrice}}</span> &nbsp;&nbsp;&nbsp;已选： 全网通版&nbsp; 3GB+64GB 金色&nbsp;&nbsp;
             <span class="total-amount">{{count}}</span>件
           </p>
-          <div class="add-tocart" @click="addCart(theDetail[0].id)">加入购物车</div>
+          <div class="add-tocart" @click="addCart(theDetail.productId)">加入购物车</div>
           <div class="imm-buy" @click="toPay(theDetail[0].id)">立即购买</div>
         </div>
       </div>
@@ -87,6 +87,7 @@ export default {
       currentVersion: '',
       activeVersionIndex: '',
       currentColor: '',
+      currentColorImg: '',
       activeColorIndex: '',
       color: [],
       product_name: '',
@@ -103,14 +104,17 @@ export default {
     this.$http.getProById(_id).then(resp => {
         console.log(resp)
       this.theDetail = resp.data;
-      this.version = this.theDetail.version.versionName
-      this.color = this.theDetail.colors.colorName
+      this.version = this.theDetail.version
+      this.color = this.theDetail.colors
       this.product_name = this.theDetail.productName
       this.describe = this.theDetail.productDescribe
-      this.midImg = this.theDetail.imgUrl
-      this.singlePrice = this.theDetail.productSize
-      console.log(this.theDetail)
+      // this.midImg = this.theDetail.imgUrl
+      this.currentColorImg = this.theDetail.imgUrl
+      this.singlePrice = this.version[0].versionPrice
     });
+
+    console.log(this.theDetail)
+    console.log(this.currentColorImg)
     // this.$http.getDetailImg().then(resp => {
     //   //   console.log(resp);
     //   const list = resp.data.res_body.list;
@@ -132,12 +136,14 @@ export default {
         console.log(item,index)
         this.currentVersion = item
         this.activeVersionIndex = index
+        this.singlePrice = item.versionPrice
     },
     // 选择颜色
     choicColor(item,index) {
-        console.log(item,index)
+        // console.log(item,index)
         this.currentColor = item
         this.activeColorIndex = index
+        this.currentColorImg = item.colorImgPath
     },
     //   数量加按钮
     handleAdd() {
@@ -150,20 +156,27 @@ export default {
       if (this.count < 1) this.count = 1;
     },
     addCart(id) {
+    console.log(this.theDetail)
         // console.log(id)
         // console.log(window.sessionStorage.user)
         const isLogin = Boolean(window.sessionStorage.user)
         const user_id = window.sessionStorage.user_id
         const isCart = Boolean(window.sessionStorage.cart)
+        const params = {
+          userId: user_id,
+          productId: id,
+          buyNum: this.count,
+          buyColor: this.currentColor.colorName,
+          buyVersion: this.currentVersion.versionName,
+          buyPrice: this.singlePrice
+        }
+        console.log(params)
 
         if(isCart) {
           this.cart = JSON.parse(window.sessionStorage.cart)
         }else{
           this.cart = []
         }
-
-        // console.log(JSON.parse(window.sessionStorage.cart))
-        // this.cart = JSON.parse(window.sessionStorage.cart) || []
         console.log(this.cart )
         const isInCart = this.cart.some(cartItem => cartItem.product_id === id)
         if(this.currentVersion === '' || this.currentColor === '')
@@ -191,9 +204,14 @@ export default {
             price: this.singlePrice
           })
         }
+        
         console.log(this.cart)
         if(isLogin && this.currentVersion !== '' && this.currentColor !== ''){
             window.sessionStorage.setItem("cart", JSON.stringify(this.cart));
+            this.$http.saveCart(params).then(resp => {
+              console.log(params)
+              console.log(resp)
+            })
             alert("添加购物车成功! id为" + id);
         } else {
             alert("请先登录！")
@@ -327,7 +345,8 @@ export default {
             cursor: pointer;
           }
           .activeVersion {
-            border: 1px solid red;
+            background: rgba(100,149,237,0.5);
+            color: white;
           }
         }
       }
@@ -347,7 +366,7 @@ export default {
           height: 100px;
           .choice-color {
             float: left;
-            width: 80px;
+            width: 110px;
             height: 40px;
             line-height: 40px;
             border: 1px solid gray;
@@ -359,7 +378,9 @@ export default {
             cursor: pointer;
           }
           .activeColor {
-            border: 1px solid #7197ef;
+            // border: 1px solid #7197ef;
+            background: rgba(100,149,237,0.5);
+            color: white;
           }
         }
       }

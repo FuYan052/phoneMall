@@ -47,20 +47,19 @@ export const getNav = () => {
 export const getDetail = (id) => {
   return ajax.get('http://rap2api.taobao.org/app/mock/120117/api/detail?id'+id)
 }
+
 // 获取用户列表
-export const getUserList = () => {
-  return ajax.get('http://120.78.53.181:8000/api/users/')
-}
-// 编辑用户
-export const saveUser = (id,params) => {
-  return ajax.post('http://120.78.53.181:8000/api/users/'+id, params)
-}
+// export const getUserList = () => {
+//   return ajax.get('http://120.78.53.181:8000/api/users/')
+// }
+
+
 // 登录
 // export const getLogin = (params) => {
 //   return ajax.post('http://http://192.168.137.45:8001/phone/login?'+params)
 // } 
 export const getLogin = (params) => {
-  return ajax.get(encodeURI(`http://192.168.43.204:8001/phone/login?username=${params.username}&password=${params.password}`))
+  return ajax.get(encodeURI(`http://192.168.137.45:8001/phone/login?username=${params.username}&password=${params.password}`))
 } 
 
 // 登录假接口
@@ -69,7 +68,7 @@ export const getLogin = (params) => {
 // }
 // 注册
 export const getRegister = (params) => {
-  return ajax.post('http://192.168.43.204:8001/phone/addUser/', params)
+  return ajax.post('http://192.168.137.45:8001/phone/addUser/', params)
 }
 // export const getRegister = (params) => {
 //   return ajax.post('http://120.78.53.181:8000/api/users/', params)
@@ -77,21 +76,42 @@ export const getRegister = (params) => {
 
 // 保存收货地址
 export const saveAddress = (params) => {
-  return ajax.post('http://192.168.43.204:8001/phone/ra/addAddress', params)
+  return ajax.post('http://192.168.137.45:8001/phone/ra/addAddress', params)
 }
 // 根据用户id获取收货地址
 export const getAddress = (params) => {
-  return ajax.post(`http://192.168.43.204:8001/phone/ra/getAllAddress?userId=${params}`)
+  return ajax.post(`http://192.168.137.45:8001/phone/ra/getAllAddress?userId=${params}`)
 }
 // 根据用户id获取收货地址
 export const getBannerImg = () => {
-  return ajax.get('http://192.168.43.204:8001/phone/getAllPro')
+  return ajax.get('http://192.168.137.45:8001/phone/getAllPro')
 }
 // 获取所有商品
 export const getAllPro = () => {
-  return ajax.get('http://192.168.43.204:8001/phone/getAllPro')
+  return ajax.get('http://192.168.137.45:8001/phone/getAllPro')
 } 
 // 根据id获取商品详情
 export const getProById = (id) => {
-  return ajax.get('http://192.168.43.204:8001/phone/getProById/?proId='+id)
+  return ajax.get('http://192.168.137.45:8001/phone/getProById/?proId='+id)
+}
+// 对应用户id存购物车
+export const saveCart = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/addCart', params)
+}
+// 获取用户存入的购物车
+export const getCarts = (userId) => {
+  return ajax.get('http://192.168.137.45:8001/phone/getCarts?userId='+userId)
+}
+// 获取用户列表
+export const getUserList = () => {
+  return ajax.get('http://192.168.137.45:8001/phone/getAllUser')
+}
+// 删除用户
+export const delUser = (userIDS) => {
+  return ajax.post('http://192.168.137.45:8001/phone/delUser?userIDS='+userIDS)
+}
+
+// 保存编辑后的用户
+export const updateUser = (user) => {
+  return ajax.post('http://192.168.137.45:8001/phone/updateUser', user)
 }

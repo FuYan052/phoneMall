@@ -4,13 +4,13 @@
     <a href="#" slot="extra">更多</a>
     <p>
       <a-table :columns="columns" :dataSource="data" bordered>
-        <template v-for="col in ['user_id', 'user_name', 'phone_num','address', 'createat', 'operation']" :slot="col" slot-scope="text, record, index">
+        <template v-for="col in ['userId', 'userName', 'phoneNum','address', 'createAt', 'operation']" :slot="col" slot-scope="text, record, index">
           <div :key="col">
             <a-input
               v-if="record.editable"
               style="margin: -5px 0"
               :value="text"
-              @change="e => handleChange(e.target.value, record.user_id, col)"
+              @change="e => handleChange(e.target.value, record.userId, col)"
             />
             <template v-else>{{text}}</template>
           </div>
@@ -18,21 +18,21 @@
         <template slot="operation" slot-scope="text, record, index">
           <div class='editable-row-operations'>
             <span v-if="record.editable">
-              <a @click="() => save(record.user_id)">保存</a>
-              <a-popconfirm title='确定取消?' @confirm="() => cancel(record.user_id)">
+              <a @click="() => save(record.userId)">保存</a>
+              <a-popconfirm title='确定取消?' @confirm="() => cancel(record.userId)">
                 <a>取消</a>
               </a-popconfirm>
             </span>
             <span v-else>
-              <a @click="() => edit(record.user_id)">编辑</a>
+              <a @click="() => edit(record.userId)">编辑</a>
             </span>
-              <!-- <a-popconfirm
-                v-if="dataSource.length"
-                title="确认删除?"
-                @confirm="() => onDelete(record.user_id)">
-                <a href="javascript:;">删除</a>
-              </a-popconfirm> -->
           </div>
+           <a-popconfirm
+            v-if="data.length"
+            title="确认删除吗?"
+            @confirm="() => onDelete(record.userId)">
+            <a href="javascript:;">删除</a>
+          </a-popconfirm>
         </template>
       </a-table>
     </p>
@@ -44,19 +44,19 @@
 <script>
 const columns = [{
   title: '用户编号',
-  dataIndex: 'user_id',
+  dataIndex: 'userId',
   width: '10%',
-  scopedSlots: { customRender: 'user_id' },
+  scopedSlots: { customRender: 'userId' },
 },{
   title: '用户姓名',
-  dataIndex: 'user_name',
+  dataIndex: 'userName',
   width: '15%',
-  scopedSlots: { customRender: 'user_name' },
+  scopedSlots: { customRender: 'userName' },
 },{
   title: '联系电话',
-  dataIndex: 'phone_num',
+  dataIndex: 'phoneNum',
   width: '15%',
-  scopedSlots: { customRender: 'phone_num' },
+  scopedSlots: { customRender: 'phoneNum' },
 }, {
   title: '详细住址',
   dataIndex: 'address',
@@ -64,9 +64,9 @@ const columns = [{
   scopedSlots: { customRender: 'address' },
 },{
   title: '注册时间',
-  dataIndex: 'createat',
+  dataIndex: 'createAt',
   width: '15%',
-  scopedSlots: { customRender: 'createat' },
+  scopedSlots: { customRender: 'createAt' },
 },  {
   title: '操作',
   dataIndex: 'operation',
@@ -88,65 +88,67 @@ export default {
   data () {
     this.cacheData = data.map(item => ({ ...item }))
     return {
-      data,
-      datap:[],
+      data: [],
       columns,
     }
   },
   created() {
     this.$http.getUserList().then(resp => {
-      console.log(resp)
-      this.datap = resp.data
-      this.data = this.data.concat(this.datap)
-      // console.log(this.datap)
+      // console.log(resp)
+      this.data = resp.data.data
+      console.log(this.data)
     })
-    console.log(this.data)
   },
   methods: {
-    handleChange (value, user_id, column) {
+    handleChange (value, userId, column) {
       const newData = [...this.data]
-      const target = newData.filter(item => user_id === item.user_id)[0]
+      const target = newData.filter(item => userId === item.userId)[0]
       if (target) {
         target[column] = value
         this.data = newData
       }
     },
-    edit (user_id) {
+    edit (userId) {
       const newData = [...this.data]
-      const target = newData.filter(item => user_id === item.user_id)[0]
+      const target = newData.filter(item => userId === item.userId)[0]
       if (target) {
         target.editable = true
         this.data = newData
       }
     },
-    save (user_id) {
+    save (userId) {
       const newData = [...this.data]
-      const target = newData.filter(item => user_id === item.user_id)[0]
-      console.log(user_id)
+      const target = newData.filter(item => userId === item.userId)[0]
+      console.log(userId)
       if (target) {
         delete target.editable
         this.data = newData
         this.cacheData = newData.map(item => ({ ...item }))
-        this.$http.saveUser(user_id,{
-          data
+        this.$http.updateUser({
+          userId: userId,
+          username: this.data.username,
+          phoneNum: this.data.phoneNum,
+          address: this.data.address,
         }).then(resp => {
-          console.log(user_id)
+          console.log(userId)
         })
       }
     },
-    cancel (user_id) {
+    cancel (userId) {
       const newData = [...this.data]
-      const target = newData.filter(item => user_id === item.user_id)[0]
+      const target = newData.filter(item => userId === item.userId)[0]
       if (target) {
-        Object.assign(target, this.cacheData.filter(item => user_id === item.user_id)[0])
+        Object.assign(target, this.cacheData.filter(item => userId === item.userId)[0])
         delete target.editable
         this.data = newData
       }
     },
     // 删除用户
-    onDelete (user_id) {
-      const dataSource = [...this.dataSource]
-      this.dataSource = dataSource.filter(item => item.user_id !== user_id)
+    onDelete (userId) {
+      this.data = this.data.filter(item => item.userId !== userId)
+      this.$http.delUser(userId).then(resp => {
+        console.log(resp)
+      })
     },
   },
 }
