@@ -115,8 +115,6 @@
             v-bind="formItemLayout"
             label="图片路径"
             extra=""
-            :label-col="{ span: 5 }"
-            :wrapper-col="{ span: 12 }"
           >
             <a-upload
               v-decorator="['图片路径',
@@ -126,7 +124,7 @@
                 getValueFromEvent: normFile,
               }]"
               name="logo"
-              action="/upload.do"
+              action="http://192.168.137.45:8001/phone/uploadImg"
               list-type="picture"
             >
               <a-button>
@@ -137,6 +135,8 @@
           <a-form-item
             v-bind="formItemLayout"
             label="注册时间"
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 12 }"
           >
             <a-date-picker v-decorator="['date-picker', config]" />
           </a-form-item>
@@ -148,7 +148,7 @@
               type="primary"
               html-type="submit"
             >
-              Submit
+              保存
             </a-button>
           </a-form-item>
         </a-form>
@@ -186,6 +186,7 @@ export default {
     this.form = this.$form.createForm(this);
   },
   methods: {
+    
     handleSubmit (e) {
       e.preventDefault();
       const values = {
@@ -200,16 +201,20 @@ export default {
          
       });
     },
-    handleSelectChange (value) {
-      console.log(value);
-      this.form.setFieldsValue({
-        note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-      });
+    normFile  (e) {
+      console.log('Upload event:', e);
+      if (Array.isArray(e)) {
+        return e;
+      }
+      return e && e.fileList;
     },
   },
 }
 </script>
 
-<style>
-
+<style lang='scss' scoped>
+#components-form-demo-validate-other .dropbox {
+  height: 180px;
+  line-height: 1.5;
+}
 </style>

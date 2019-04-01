@@ -80,11 +80,11 @@ export const saveAddress = (params) => {
 }
 // 根据用户id获取收货地址
 export const getAddress = (params) => {
-  return ajax.post(`http://192.168.137.45:8001/phone/ra/getAllAddress?userId=${params}`)
+  return ajax.post('http://192.168.137.45:8001/phone/ra/getAllAddress?userId='+params)
 }
-// 根据用户id获取收货地址
-export const getBannerImg = () => {
-  return ajax.get('http://192.168.137.45:8001/phone/getAllPro')
+// 删除收货地址
+export const delAddress = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/ra/delAddress?addressIds='+ params)
 }
 // 获取所有商品
 export const getAllPro = () => {
@@ -102,6 +102,10 @@ export const saveCart = (params) => {
 export const getCarts = (userId) => {
   return ajax.get('http://192.168.137.45:8001/phone/getCarts?userId='+userId)
 }
+// 删除购物车
+export const delCart = (ids) => {
+  return ajax.post('http://192.168.137.45:8001/phone/delUser?ids='+ids)
+}
 // 获取用户列表
 export const getUserList = () => {
   return ajax.get('http://192.168.137.45:8001/phone/getAllUser')
@@ -114,4 +118,8 @@ export const delUser = (userIDS) => {
 // 保存编辑后的用户
 export const updateUser = (user) => {
   return ajax.post('http://192.168.137.45:8001/phone/updateUser', user)
+}
+// 查询订单
+export const getOrders = (userId) => {
+  return ajax.get('http://192.168.137.45:8001/phone/order/getOrders?userId='+userId)
 }

@@ -8,7 +8,6 @@ import REGION_DATA from 'china-area-data'
 
 
 import App from './App'
-import CkeckCode from "@/components/checkcode/CkeckCode"
 import router from './router'
 import store from './store'
 import * as $http from './requests'
@@ -30,6 +29,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App, CkeckCode },
+  components: { App },
   template: '<App/>'
 })

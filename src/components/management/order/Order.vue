@@ -32,22 +32,57 @@
 
 <script>
 const columns = [{
-  title: 'name',
-  dataIndex: 'name',
-  width: '25%',
-  scopedSlots: { customRender: 'name' },
-}, {
-  title: 'age',
-  dataIndex: 'age',
+  title: '订单编号',
+  dataIndex: 'id',
   width: '15%',
-  scopedSlots: { customRender: 'age' },
+  scopedSlots: { customRender: 'id' },
 }, {
-  title: 'address',
-  dataIndex: 'address',
-  width: '40%',
-  scopedSlots: { customRender: 'address' },
+  title: '用户编号',
+  dataIndex: 'userId',
+  width: '7%',
+  scopedSlots: { customRender: 'userId' },
 }, {
-  title: 'operation',
+  title: '产品编号',
+  dataIndex: 'productId',
+  width: '7%',
+  scopedSlots: { customRender: 'productId' },
+},{
+  title: '产品名称',
+  dataIndex: 'product_name',
+  width: '7%',
+  scopedSlots: { customRender: 'product_name' },
+}, {
+  title: '颜色',
+  dataIndex: 'color',
+  width: '7%',
+  scopedSlots: { customRender: 'color' },
+}, {
+  title: '版本',
+  dataIndex: 'version',
+  width: '12%',
+  scopedSlots: { customRender: 'version' },
+}, {
+  title: '单价',
+  dataIndex: 'product_price',
+  width: '7%',
+  scopedSlots: { customRender: 'product_price' },
+}, {
+  title: '购买数量',
+  dataIndex: 'productCount',
+  width: '7%',
+  scopedSlots: { customRender: 'productCount' },
+}, {
+  title: '合计',
+  dataIndex: 'total',
+  width: '10%',
+  scopedSlots: { customRender: 'total' },
+},{
+  title: '下单时间',
+  dataIndex: 'create_time',
+  width: '12%',
+  scopedSlots: { customRender: 'create_time' },
+},{
+  title: '操作',
   dataIndex: 'operation',
   scopedSlots: { customRender: 'operation' },
 }]
@@ -69,6 +104,13 @@ export default {
       data,
       columns,
     }
+  },
+  created() {
+    const userId = 10
+    this.$http.getOrders(userId).then(resp => {
+      console.log(resp)
+      this.data = resp.data
+    })
   },
   methods: {
     handleChange (value, key, column) {

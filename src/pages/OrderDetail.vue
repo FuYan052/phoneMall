@@ -10,6 +10,8 @@
         <p><span>收货人：</span>{{item.receiver}}</p>
         <p><span>联系电话：</span>{{item.signerMobile}}</p>
         <p><span>详细地址：</span>{{item.province}}{{item.city}}{{item.district}}{{item.address}}</p>
+        <a-checkbox class="checkbox" @change="onChange(item)">使用此地址</a-checkbox>
+        <p class="del" @click="handleDel(item)">删除</p>
       </div>
       <!-- 新建收获地址 -->
       <div class="toAdd">
@@ -121,8 +123,10 @@
     </div>
     <div class="toPay">
       <p>应付总额：<span>￥2397.00</span><br />
-         收件人：张三<br />
-         收货地址：云南玉溪红塔区
+         收件人：{{choicedReceiver}}<br />
+         联系电话： {{choicePhone}}<br />
+         收货地址：{{choicedAddress}}
+         
       </p>
       <div class="btn-toPay">
         提交订单
@@ -152,12 +156,29 @@ export default {
       signerMobile: '',
       visible: false,
       confirmLoading: false,
-      allAddress: []
+      allAddress: [],
+      choicedReceiver: '',
+      choicePhone: '',
+      choicedAddress: '',
     }
   },
   components: { 
     RegionPicker,
     BottomHome,
+  },
+  created() {
+    // console.log(this.$route.params.id)
+    // this.fetchAllAddress()
+    const user_id = window.sessionStorage.user_id
+    console.log("ok")
+    // 获取收货地址
+      this.$http.getAddress(user_id).then(resp => {
+        console.log(resp)
+        if(resp.status === 200) {
+          this.allAddress = resp.data 
+          console.log(this.allAddress)
+        }
+      })
   },
   methods: {
     showModal() {
@@ -169,14 +190,14 @@ export default {
       }
         
     },
-    // handleSubmit (e) {
-    //   // e.preventDefault();
-    //   this.form.validateFields((err, values) => {
-    //     if (!err) {
-    //       console.log('Received values of form: ', values);
-    //     }
-    //   });
-    // },
+
+    onChange (item) {
+      console.log(item)
+      this.choicedReceiver = item.receiver
+      this.choicedAddress = item.province + item.district + item.address
+      this.choicePhone = item.signerMobile
+      console.log(this.choicedAddress)
+    },
 
     // 选择城市
     change(e) {
@@ -217,47 +238,32 @@ export default {
       setTimeout(() => {
         this.visible = false;
         this.confirmLoading = false;
+        // 获取收货地址
+        this.$http.getAddress(user_id).then(resp => {
+          console.log(resp)
+          if(resp.status === 200) {
+            this.allAddress = resp.data 
+            console.log(this.allAddress)
+          }
+        })
       }, 2000);
 
-      // this.fetchAllAddress()
-      // const user_id = window.sessionStorage.user_id
-      this.$http.getAddress(user_id).then(resp => {
-        console.log(resp)
-        if(resp.status === 200) {
-          this.allAddress = resp.data 
-          console.log(this.allAddress)
-        }
-      })
+      
     },
-
     handleCancel(e) {
       console.log('Clicked cancel button');
       this.visible = false
     },
-    // 获取该用户所有地址
-    // fetchAllAddress() {
-    //   console.log("ok")
-    //   const user_id = window.sessionStorage.user_id
-    //   this.$http.getAddress(user_id).then(resp => {
-    //     console.log(resp)
-    //     if(resp.status === 200) {
-    //       this.allAddress = resp.data 
-    //       console.log(this.allAddress)
-    //     }
-    //   })
-    // },
-  created() {
-    // console.log(this.$route.params.id)
-    // this.fetchAllAddress()
-    const user_id = window.sessionStorage.user_id
-      this.$http.getAddress(user_id).then(resp => {
-        console.log("ok")
-        console.log(resp)
-        if(resp.status === 200) {
-          this.allAddress = resp.data 
-          console.log(this.allAddress)
-        }
-      })
+    // 删除地址
+    handleDel(item) {
+      const result = confirm("确定要删除吗？")
+      if(result){
+        this.allAddress = this.allAddress.filter(_item => _item.receiveAdressId !== item.receiveAdressId)
+        this.$http.delAddress(item.receiveAdressId).then(resp => {
+          console.log(resp)
+        })
+      }
+      
     }
   }
 }
@@ -266,7 +272,7 @@ export default {
 <style lang='scss' scoped>
   .order {
     background: #ececeb;
-    height: 100%;
+    // height: 100%;
     .headerTitle {
       width: 88%;
       background: #fff;
@@ -279,7 +285,7 @@ export default {
     }
     .address {
       width: 88%;
-      height: 280px;
+      height: 350px;
       margin: 0 auto;
       margin-top: 20px;
       background: #fff;
@@ -289,23 +295,38 @@ export default {
         color: #333333;
       }
       .hasAddress {
-        width: 300px;
-        height: 180px;
+        width: 350px;
+        height: 230px;
         padding: 10px;
         float: left;
         border: 1px solid #ccc;
         margin-top: 30px;
         margin-left: 20px;
+        position: relative;
         p {
           line-height: 40px;
           span {
             font-weight: bold;
           }
         }
+        .checkbox {
+          // width: 25px;
+          height: 25px;
+          font-size: 12px;
+          position: absolute;
+          bottom: 20px;
+        }
+        .del {
+          color: red;
+          position: absolute;
+          right: 15px;
+          bottom: 20px;
+          cursor: pointer;
+        }
       }
       .toAdd {
         width: 300px;
-        height: 180px;
+        height: 230px;
         float: left;
         border: 1px solid #ccc;
         margin-top: 30px;
@@ -313,13 +334,13 @@ export default {
         position: relative;
         .addIcon {
           position: absolute;
-          top: 45px;
+          top: 80px;
           left: 130px;
           font-size: 32px;
         }
         p {
           text-align: center;
-          margin-top: 90px;
+          margin-top: 125px;
         }
       }
     }
@@ -431,7 +452,7 @@ export default {
     }
     .toPay {
       width: 88%;
-      height: 255px;
+      height: 300px;
       background: #fff;
       margin: 0 auto;
       margin-top: 20px;
@@ -460,6 +481,9 @@ export default {
         right: 30px;
         bottom: 20px;
       }
+    }
+    #footer {
+      background: #fff;
     }
   }
 

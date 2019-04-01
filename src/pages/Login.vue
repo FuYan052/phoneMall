@@ -1,5 +1,7 @@
 <template>
   <div class="login">
+    <div class="wrap">
+      <h2>账户登录</h2>
     <a-form
       id="components-form-demo-normal-login"
       :form="form"
@@ -30,19 +32,12 @@
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-checkbox
-          v-decorator="[
-          'remember',
-          {
-            valuePropName: 'checked',
-            initialValue: true,
-          }
-        ]"
-        >记住我</a-checkbox>
         <a-button type="primary" html-type="submit" class="login-form-button">登录</a-button>
         <span id="toRegister" @click="toRegister">立即注册</span>
+        <span id="toHome" @click="toHome">返回首页</span>
       </a-form-item>
     </a-form>
+    </div>
   </div>
 </template>
 
@@ -133,6 +128,11 @@ export default {
       this.$router.push({
         path: "/register"
       });
+    },
+    toHome() {
+      this.$router.push({
+        path: "/home"
+      });
     }
   }
 };
@@ -140,22 +140,52 @@ export default {
 
 <style lang='scss' scoped>
 .login {
+  background: url(../assets/banner4.jpg);
+  background-size: 100% 100%;
+  .wrap {
   width: 400px;
   height: 500px;
+  padding: 20px;
+  background: #fff;
   margin: 200px auto;
-  #components-form-demo-normal-login .login-form {
-    max-width: 300px;
+  position: relative;
+  h2 {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    color: #1890ff;
+    margin-top: 30px;
   }
-  #components-form-demo-normal-login .login-form-forgot {
-    float: right;
+  #components-form-demo-normal-login {
+    margin-top: 80px;
+  }
+  #components-form-demo-normal-login .login-form {
+    max-width: 200px;
   }
   #components-form-demo-normal-login .login-form-button {
-    width: 100%;
+    display: block;
+    width: 100px;
+    border-radius: 20px;
+    position: absolute;
+    top: 30px;
+    left: 130px;
   }
   #toRegister {
+    display: block;
     color: #1890ff;
     font-weight: bold;
     cursor: pointer;
+    float: left;
+    margin-top: 70px;
   }
+  #toHome {
+    display: block;
+    color: #1890ff;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+    margin-top: 70px;
+  }
+}
 }
 </style>

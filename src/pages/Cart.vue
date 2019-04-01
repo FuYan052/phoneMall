@@ -12,9 +12,16 @@
         </div>
         <div class="content">
             <ul class="tab-header">
-                <li><a-checkbox 
-                @change="onCheckAllChange"
-                >多选/全选</a-checkbox></li>
+                <!-- <li><div :style="{ borderBottom: '1px solid #E9E9E9' }">
+                    <a-checkbox
+                        :indeterminate="indeterminate"
+                        @change="onCheckAllChange"
+                        :checked="checkAll"
+                    >
+                        全选
+                    </a-checkbox>
+                    </div></li> -->
+                <li></li>
                 <li>商品名称</li>
                 <li>价格</li>
                 <li>数量</li>
@@ -26,7 +33,7 @@
                 :key="index"
             >
                 <form action="">
-                    <a-checkbox class="checkBox" ref="checkedItem" @change="onChange" :checked="itemchecked"></a-checkbox>
+                    <!-- <a-checkbox-group :options="plainOptions" :value="value" v-model="checkedList" @change="onChange" /> -->
                     <div class="itemPic">
                         <img :src="item.imgPath1" alt="">
                     </div>
@@ -61,18 +68,19 @@
                 </form>
             </div>
             <div class="toPay">
-                <a-checkbox class="checkBox" @change="onChange">全选</a-checkbox>
+                <!-- <a-checkbox class="checkBox" @change="onChange">全选</a-checkbox>
                 <div class="delAll">
                     删除选中商品
-                </div>
+                </div> -->
                 <div class="calculate">
-                    已选商品<span class="count"> 2 </span>件, 合计：<span class="totalPrice">￥2397.00</span>
+                    已选商品<span class="count"> {{totalCount}} </span>件, 合计：<span class="totalPrice">￥{{totalPrice}}</span>
                     <router-link 
                     class="btn_toPay"
                     tag="div"
                     :to="{
                         path: `/order`,
                     }"
+                    @click="toPay"
                     >
                     去结算
                     </router-link>
@@ -84,7 +92,8 @@
 </template>
 
 <script>
-const plainOptions = [0,1,2]
+const plainOptions = ['Apple', 'Pear', 'Orange']
+const defaultCheckedList = []
 export default {
     name: 'Cart',
     data() {
@@ -93,10 +102,12 @@ export default {
             count: '',
             color: '',
             price: '',
-            // indeterminate: true,
+            checkedList: defaultCheckedList,
+            indeterminate: true,
             checkAll: false,
-            itemchecked: false,
             plainOptions,
+            totalPrice: '',
+            totalCount: ''
         }
     },
     created() {
@@ -107,12 +118,9 @@ export default {
             console.log(resp)
             this.cart = resp.data
             console.log(this.cart)
+            this.calculate()
         })
-
         
-    },
-    mounted() {
-        // this.plainOptions = this.$refs.checked
     },
     methods: {
         //   数量加按钮
@@ -122,6 +130,7 @@ export default {
                 item.buyNum = 5;
             item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+             this.calculate()
         },
         //   数量减按钮
         handledec(item,index) {
@@ -130,27 +139,53 @@ export default {
                 item.buyNum = 1;
             item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+            this.calculate()
+        },
+        calculate() {
+            // 每一项总价
+            const prices = []
+            const allCount = []
+            this.cart.forEach(item => {
+                prices.push(item.price * item.buyNum)
+                allCount.push(item.buyNum)
+            })
+            this.totalPrice = prices.reduce((curr,result) => {
+                return result += curr
+            })
+            this.totalCount = allCount.reduce((curr,result) => {
+                return result += curr
+            })
         },
         // 删除单项
         handleDelete(item,index) {
-            console.log(item,index)
-            this.cart = this.cart.filter((delItem,_index) => _index !== index)
-            window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+            // console.log(item,index)
+            const result = confirm("确定删除该项吗？")
+            if(result){
+                this.cart = this.cart.filter((delItem,_index) => _index !== index)
+                window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+                // this.$http.delCart(item).then(resp => {
+                //     console.log(resp)
+                // })
+                this.calculate()
+            }
         },
         // 复选框按钮
-        onChange (checkedList) {
-            this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
-            this.checkAll = checkedList.length === plainOptions.length
-        },
-        // 全选按钮
-        onCheckAllChange (e) {
-            console.log(e)
-            // this.checkAll = !this.checkAll
-            console.log(this.checkAll)
-            // if(this.checkAll){
-            //     this.itemchecked = true
-            // }
-        },
+        // onChange (checkedList) {
+        // this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
+        // this.checkAll = checkedList.length === plainOptions.length
+        // },
+        // // 全选按钮
+        // onCheckAllChange (e) {
+        //     Object.assign(this, {
+        //         checkedList: e.target.checked ? plainOptions : [],
+        //         indeterminate: false,
+        //         checkAll: e.target.checked,
+        //     })
+        // },
+        // 结算
+        toPay() {
+            
+        }
     }
 }
 </script>
