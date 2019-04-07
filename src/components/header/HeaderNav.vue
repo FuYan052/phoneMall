@@ -21,6 +21,14 @@
                 <router-link
                 tag="span"
                 :to="{
+                    path: `/mine`
+                }"
+                >个人中心</router-link>
+            </a-menu-item>
+            <a-menu-item id="menu-item">
+                <router-link
+                tag="span"
+                :to="{
                     path: `/cart`
                 }"
                 >购物车</router-link>

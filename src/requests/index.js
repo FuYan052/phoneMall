@@ -2,6 +2,9 @@ import axios from 'axios'
 import { Spin } from 'ant-design-vue'
 
 const ajax = axios.create()
+const ajax2 = axios.create({
+  headers: { "Content-Type": "multipart/form-data" },
+})
 
 // 拦截器
 // ajax.interceptors.request.use(config => {
@@ -104,7 +107,7 @@ export const getCarts = (userId) => {
 }
 // 删除购物车
 export const delCart = (ids) => {
-  return ajax.post('http://192.168.137.45:8001/phone/delUser?ids='+ids)
+  return ajax.post('http://192.168.137.45:8001/phone/delCart?ids='+ids)
 }
 // 获取用户列表
 export const getUserList = () => {
@@ -122,4 +125,36 @@ export const updateUser = (user) => {
 // 查询订单
 export const getOrders = (userId) => {
   return ajax.get('http://192.168.137.45:8001/phone/order/getOrders?userId='+userId)
+}
+// 查询所有订单
+export const getOrdersList = () => {
+  return ajax.get('http://192.168.137.45:8001/phone/order/getOrdersList')
+}
+// 添加订单
+export const addOrder = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/order/addOrder', params)
+}
+// 添加商品
+export const addPro = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/addPro', params)
+}
+// 下架商品
+export const delPro = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/downShift?productIdS='+params)
+}
+// 编辑商品
+export const updatePro = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/updatePro',params)
+}
+// 上传图片
+export const uploadProImg = (file) => {
+  return ajax.post('http://192.168.137.45:8001/phone/uploadImg', file)
+}
+// 上传颜色
+export const addColor = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/addCol', params)
+}
+// 上传版本
+export const addVersion = (params) => {
+  return ajax.post('http://192.168.137.45:8001/phone/addVer', params)
 }

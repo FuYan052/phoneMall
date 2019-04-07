@@ -24,15 +24,15 @@
               </a-popconfirm>
             </span>
             <span v-else>
-              <a @click="() => edit(record.userId)">编辑</a>
+              <a @click="() => edit(record.userId)"><a-button type="primary">编辑</a-button></a>
+              <a-popconfirm
+                v-if="data.length"
+                title="确认删除吗?"
+                @confirm="() => onDelete(record.userId)">
+                <a href="javascript:;"><a-button type="danger" icon="delete">删除</a-button></a>
+              </a-popconfirm>
             </span>
           </div>
-           <a-popconfirm
-            v-if="data.length"
-            title="确认删除吗?"
-            @confirm="() => onDelete(record.userId)">
-            <a href="javascript:;">删除</a>
-          </a-popconfirm>
         </template>
       </a-table>
     </p>
@@ -124,12 +124,16 @@ export default {
         delete target.editable
         this.data = newData
         this.cacheData = newData.map(item => ({ ...item }))
-        this.$http.updateUser({
+        console.log(this.data)
+        console.log(target)
+        const params = {
           userId: userId,
-          username: this.data.username,
-          phoneNum: this.data.phoneNum,
-          address: this.data.address,
-        }).then(resp => {
+          userName: target.username,
+          phoneNum: target.phoneNum,
+          address: target.address,
+        }
+        console.log(params)
+        this.$http.updateUser(params).then(resp => {
           console.log(userId)
         })
       }

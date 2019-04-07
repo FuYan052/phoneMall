@@ -2,7 +2,7 @@
   <div class="order">
     <a-card title="订单列表"></a-card>
     <a-table :columns="columns" :dataSource="data" bordered>
-    <template v-for="col in ['name', 'age', 'address']" :slot="col" slot-scope="text, record, index">
+    <!-- <template v-for="col in ['name', 'age', 'address']" :slot="col" slot-scope="text, record, index">
       <div :key="col">
         <a-input
           v-if="record.editable"
@@ -12,21 +12,16 @@
         />
         <template v-else>{{text}}</template>
       </div>
-    </template>
-    <template slot="operation" slot-scope="text, record, index">
-      <div class='editable-row-operations'>
-        <span v-if="record.editable">
-          <a @click="() => save(record.key)">Save</a>
-          <a-popconfirm title='Sure to cancel?' @confirm="() => cancel(record.key)">
-            <a>Cancel</a>
-          </a-popconfirm>
-        </span>
-        <span v-else>
-          <a @click="() => edit(record.key)">Edit</a>
-        </span>
-      </div>
-    </template>
-  </a-table>
+    </template> -->
+    <template slot="operation" slot-scope="text, record">
+        <a-popconfirm
+          v-if="data.length"
+          title="确定删除?"
+          @confirm="() => onDelete(record.id)">
+          <a href="javascript:;"><a-button type="danger" icon="delete">删除</a-button></a>
+        </a-popconfirm>
+      </template>
+    </a-table>
   </div>
 </template>
 
@@ -34,7 +29,7 @@
 const columns = [{
   title: '订单编号',
   dataIndex: 'id',
-  width: '15%',
+  width: '10%',
   scopedSlots: { customRender: 'id' },
 }, {
   title: '用户编号',
@@ -48,9 +43,9 @@ const columns = [{
   scopedSlots: { customRender: 'productId' },
 },{
   title: '产品名称',
-  dataIndex: 'product_name',
+  dataIndex: 'productName',
   width: '7%',
-  scopedSlots: { customRender: 'product_name' },
+  scopedSlots: { customRender: 'productName' },
 }, {
   title: '颜色',
   dataIndex: 'color',
@@ -63,9 +58,9 @@ const columns = [{
   scopedSlots: { customRender: 'version' },
 }, {
   title: '单价',
-  dataIndex: 'product_price',
+  dataIndex: 'price',
   width: '7%',
-  scopedSlots: { customRender: 'product_price' },
+  scopedSlots: { customRender: 'price' },
 }, {
   title: '购买数量',
   dataIndex: 'productCount',
@@ -73,63 +68,60 @@ const columns = [{
   scopedSlots: { customRender: 'productCount' },
 }, {
   title: '合计',
-  dataIndex: 'total',
+  dataIndex: 'sum',
   width: '10%',
-  scopedSlots: { customRender: 'total' },
+  scopedSlots: { customRender: 'sum' },
 },{
   title: '下单时间',
-  dataIndex: 'create_time',
+  dataIndex: 'date',
   width: '12%',
-  scopedSlots: { customRender: 'create_time' },
-},{
-  title: '操作',
-  dataIndex: 'operation',
-  scopedSlots: { customRender: 'operation' },
+  scopedSlots: { customRender: 'date' },
 }]
 
-const data = []
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  })
-}
+// const data = []
+// for (let i = 0; i < 100; i++) {
+//   data.push({
+//     key: i.toString(),
+//     name: `Edrward ${i}`,
+//     age: 32,
+//     address: `London Park no. ${i}`,
+//   })
+// }
 export default {
   name: 'Order',
    data () {
-    this.cacheData = data.map(item => ({ ...item }))
+    // this.cacheData = data.map(item => ({ ...item }))
     return {
-      data,
+      data: [],
       columns,
+      totalPrice: ''
     }
   },
   created() {
     const userId = 10
-    this.$http.getOrders(userId).then(resp => {
+    this.$http.getOrdersList().then(resp => {
       console.log(resp)
       this.data = resp.data
+      console.log(this.data)
+      console.log(typeof(this.data[0].price))
+      this.totalPrice = Number(this.data.price) * this.data.productCount
     })
   },
   methods: {
-    handleChange (value, key, column) {
-      const newData = [...this.data]
-      const target = newData.filter(item => key === item.key)[0]
-      if (target) {
-        target[column] = value
-        this.data = newData
-      }
+    // handleChange (value, key, column) {
+    //   const newData = [...this.data]
+    //   const target = newData.filter(item => key === item.key)[0]
+    //   if (target) {
+    //     target[column] = value
+    //     this.data = newData
+    //   }
+    // },
+    onDelete (_id) {
+      const data = [...this.data]
+      this.data = data.filter(item => item.id !== _id)
+
     },
-    edit (key) {
-      const newData = [...this.data]
-      const target = newData.filter(item => key === item.key)[0]
-      if (target) {
-        target.editable = true
-        this.data = newData
-      }
-    },
-    save (key) {
+    save (id) {
       const newData = [...this.data]
       const target = newData.filter(item => key === item.key)[0]
       if (target) {
@@ -138,7 +130,7 @@ export default {
         this.cacheData = newData.map(item => ({ ...item }))
       }
     },
-    cancel (key) {
+    cancel (id) {
       const newData = [...this.data]
       const target = newData.filter(item => key === item.key)[0]
       if (target) {

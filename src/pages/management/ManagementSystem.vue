@@ -23,6 +23,9 @@
               </span>
               <a-menu-item key="3" @click="openProductList">商品列表</a-menu-item>
               <a-menu-item key="4" @click="openProductEdit">编辑商品</a-menu-item>
+              <a-menu-item key="5" @click="openProductAdd">上新商品</a-menu-item>
+              <a-menu-item key="6" @click="openProductColor">商品颜色</a-menu-item>
+              <a-menu-item key="7" @click="openProductVersion">商品版本</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="1111">
               <span slot="title">
@@ -32,7 +35,7 @@
               </router-link>
               </span>
               <a-menu-item key="3" @click="openList">用户列表</a-menu-item>
-              <a-menu-item key="4" @click="openEdit">编辑用户</a-menu-item>
+              <!-- <a-menu-item key="4" @click="openEdit">编辑用户</a-menu-item> -->
             </a-sub-menu>
           </a-menu>
         </a-layout-sider>
@@ -74,6 +77,7 @@ export default {
         path: '/admin/useredit'
       })
     },
+    
     // 商品管理
     openProductList() {
       this.$router.push({
@@ -85,6 +89,21 @@ export default {
         path: '/admin/productedit'
       })
     },
+    openProductAdd() {
+      this.$router.push({
+        path: '/admin/productadd'
+      })
+    },
+    openProductColor() {
+      this.$router.push({
+        path: '/admin/productcolor'
+      })
+    },
+    openProductVersion() {
+      this.$router.push({
+        path: '/admin/productversion'
+      })
+    }
   }
 };
 </script>

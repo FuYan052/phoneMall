@@ -4,17 +4,17 @@
     <div class="hotWrap">
       <router-link 
       v-for="item in supremePhoneList" 
-      :key="item.id"
+      :key="item.productId"
       tag="dl" 
       :to="{
                 path: `/detail`,
                 query: {
-                    id:item.id
+                    id:item.productId
                 }}"
       >
-        <img :src="item.image">
-        <dt>耳机原装正品入耳式</dt>
-        <dd>￥{{item.price}}</dd>
+        <img :src="item.imgUrl">
+        <dt>{{item.productName}}</dt>
+        <dd>￥{{item.productSize}}</dd>
       </router-link>
     </div>
   </div>
@@ -29,11 +29,15 @@ export default {
     };
   },
   created() {
-    this.$http.getHotSale().then(resp => {
+     this.$http.getAllPro().then(resp => {
+      console.log(resp)
       //   console.log(resp.data.data.items.list)
-      const result = resp.data.data.items.list;
-      this.supremePhoneList = result.slice(0, 8);
-      // console.log(this.supremePhoneList);
+      // const result = resp.data.data.items.list;
+      const result = resp.data;
+      const List = result.filter(item => item.sellPoint == '好评')
+      this.supremePhoneList = List.slice(0,8)
+      console.log(this.supremePhoneList)
+      // console.log(this.hotList);
     });
   }
 };

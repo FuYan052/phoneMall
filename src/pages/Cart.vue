@@ -123,6 +123,7 @@ export default {
         
     },
     methods: {
+        // const userId = window.sessionStorage.user_id;
         //   数量加按钮
         handleAdd(item,index) {
             item.buyNum++;
@@ -130,7 +131,7 @@ export default {
                 item.buyNum = 5;
             item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
-             this.calculate()
+            this.calculate()
         },
         //   数量减按钮
         handledec(item,index) {
@@ -163,9 +164,9 @@ export default {
             if(result){
                 this.cart = this.cart.filter((delItem,_index) => _index !== index)
                 window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
-                // this.$http.delCart(item).then(resp => {
-                //     console.log(resp)
-                // })
+                this.$http.delCart(item.productId).then(resp => {
+                    console.log(resp)
+                })
                 this.calculate()
             }
         },

@@ -90,7 +90,7 @@ export default {
           // 登录接口
           this.$http.getLogin(params).then(resp => {
             console.log(resp);
-            if (resp.status === 200) {
+            if (resp.status === 200 && params.username == resp.data.userName && params.password === resp.data.password) {
               window.sessionStorage.setItem("user", resp.data.userName);
               window.sessionStorage.setItem("user_id", resp.data.userId);
               // window.sessionStorage.setItem('token', resp.data.data.token)
@@ -101,6 +101,8 @@ export default {
               }else{
                 this.$router.push("/home");
               }
+            }else{
+              alert("账户名或密码错误！")
             }
           });
 

@@ -1,7 +1,8 @@
 <template>
-  <div class="userEdit">
-    <a-card title="编辑商品">
+  <div class="productAdd">
+    <a-card title="上新商品">
       <a href="#" slot="extra">more</a>
+      <!-- 商品信息 -->
       <p>
         <a-form
           :form="form"
@@ -15,10 +16,22 @@
             <a-input
               v-decorator="[
                 '商品编号',
-                { initialValue: id },
                 {rules: [{ required: true, message: '请输入商品编号!' }]}
               ]"
                 placeholder="请输入商品编号"
+            />
+          </a-form-item>
+          <a-form-item
+            label="品牌编号"
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 12 }"
+          >
+            <a-input
+              v-decorator="[
+                '品牌编号',
+                {rules: [{ required: true, message: '请输入品牌编号!' }]}
+              ]"
+                placeholder="请输入品牌编号"
             />
           </a-form-item>
           <a-form-item
@@ -29,7 +42,6 @@
             <a-input
               v-decorator="[
                 '商品名称',
-                { initialValue: name },
                 {rules: [{ required: true, message: '请输入商品名称!' }]}
               ]"
               placeholder="请输入商品名称"
@@ -43,7 +55,6 @@
             <a-input
               v-decorator="[
                 '商品描述',
-                { initialValue: describe },
                 {rules: [{ required: true, message: '请输入商品描述!' }]}
               ]"
               placeholder="请输入商品描述"
@@ -57,7 +68,6 @@
             <a-input
               v-decorator="[
                 '商品单价',
-                { initialValue: price },
                 {rules: [{ required: true, message: '请输入商品单价!' }]}
               ]"
               placeholder="请输入商品单价"
@@ -71,7 +81,6 @@
             <a-input
               v-decorator="[
                 '销售状态',
-                { initialValue: status },
                 {rules: [{ required: true, message: '请输入销售状态!' }]}
               ]"
               placeholder="请输入销售状态"
@@ -85,62 +94,11 @@
             <a-input
               v-decorator="[
                 '商品路径',
-                { initialValue: path },
                 {rules: [{ required: true, message: '请输入商品路径!' }]}
               ]"
               placeholder="请输入商品路径"
             />
           </a-form-item>
-          <!-- <a-form-item
-            label="图片路径"
-            :label-col="{ span: 5 }"
-            :wrapper-col="{ span: 12 }"
-            extra=""
-          >
-            <a-upload
-              action="http://192.168.43.204:8001/phone/uploadProImgs"
-              listType="picture"
-              class="upload-list-inline"
-            >
-              <a-button>
-                <a-icon type="upload" /> 上传图片
-              </a-button>
-            </a-upload>
-          </a-form-item>  -->
-          <!-- <a-form-item
-            v-bind="formItemLayout"
-            label="商品图片"
-            extra=""
-          >
-            <a-upload
-              v-decorator="['upload', {
-                valuePropName: 'fileList',
-                getValueFromEvent: normFile,
-              }]"
-              name="pic"
-              action="http://192.168.43.204:8001/phone/uploadImg"
-              list-type="picture"
-            >
-              <a-button>
-                <a-icon type="upload" /> 点击上传
-              </a-button>
-            </a-upload>
-          </a-form-item> -->
-          <!-- <a-form-item
-            label="商品图片"
-            :label-col="{ span: 5 }"
-            :wrapper-col="{ span: 12 }"
-          >
-            <a-input
-            class="imgInput"
-            type="file"
-              v-decorator="[
-                '商品图片',
-                {rules: [{ required: true, message: '请选择图片!' }]}
-              ]"
-              placeholder="请选择图片"
-            />
-          </a-form-item> -->
           <a-form-item
             :wrapper-col="{ span: 12, offset: 6 }"
           >
@@ -159,18 +117,12 @@
 
 <script>
 export default {  
-  name: 'ProductEdit',
+  name: 'ProductAdd',
   data () {
     return {
-      target: '',
-      id: '',
-      name: '',
-      describe: '',
-      price: '',
-      status: '',
-      path: '',
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
+      imgUrl: '',
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
@@ -192,16 +144,6 @@ export default {
   beforeCreate () {
     this.form = this.$form.createForm(this);
   },
-  created() {
-    this.target = this.$route.query
-    this.id = this.target.productId
-    this.name = this.target.productName
-    this.describe = this.target.productDescribe
-    this.price = this.target.productSize
-    this.status = this.target.sellPoint
-    this.path = this.target.imgUrl
-    console.log(this.target)
-  },
   methods: {
     handleSubmit (e) {
       e.preventDefault();
@@ -210,19 +152,38 @@ export default {
           console.log('Received values of form: ', values);
           const params = {
             productId: values.商品编号,
+            brandId: values.品牌编号,
+            productSize: values.商品单价,
             productName: values.商品名称,
             productDescribe: values.商品描述,
-            productSize: values.商品单价,
-            sellPoint: values.销售状态,
-            imgUrl: values.商品路径,
+            isSelling: values.销售状态,
+            imgUrl: values.商品路径,            
+            
+            }
+          console.log(params)
+          this.$http.addPro(params).then(resp => {
+          console.log(resp)
+          })
+        }
+      });
+      
+    },
+    handleColorSubmit(e) {
+       e.preventDefault();
+       e.stopPropagation();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log('Received color values of form: ', values);
+          const params = {
+            productId: values.商品编号,
+            versionName: values.颜色,
+            versionPrice: values.颜色编号,
+
           }
           console.log(params)
-          this.$http.updatePro(params).then(resp => {
+          this.$http.addVersion(params).then(resp => {
           console.log(resp)
-          if(resp.status === 200){
-            alert("修改成功！")
-          }
-          })
+      })
         }
       });
       
@@ -235,17 +196,30 @@ export default {
       return e && e.fileList;
     },
   },
+  // uploadImg() {
+  //   const file = this.imgUrl
+  //   this.$http.uploadProImg(file).then(resp => {
+  //     console.log(resp)
+  //   })
+  // }
 }
 </script>
 
 <style lang='scss' scoped>
-.userEdit {
+.productAdd {
+  #upload-list-inline {
+    width: 300px;
+  }
+  .ant-upload-list .ant-upload-list-picture{
+    width: 300px;
+  }
   #components-form-demo-validate-other .dropbox {
   height: 180px;
   line-height: 1.5;
 }
 .imgInput {
-
+  // width: 250px;
+  height: 50px;
 }
 }
 

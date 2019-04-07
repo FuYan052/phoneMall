@@ -5,12 +5,16 @@ const Login = () => import('@/pages/Login')
 const Register = () => import('@/pages/Register')
 const Cart = () => import('@/pages/Cart')
 const OrderDetail = () => import('@/pages/OrderDetail')
+const Payment = () => import('@/pages/Payment')
 const Mine = () => import('@/pages/Mine')
 const ManagementSystem = () => import('@/pages/management/ManagementSystem')
 
 import Order from '@/components/management/order/Order'
 import ProductList from '@/components/management/product/ProductList'
 import ProductEdit from '@/components/management/product/ProductEdit'
+import ProductAdd from '@/components/management/product/ProductAdd'
+import ProductColor from '@/components/management/product/ProductColor'
+import ProductVersion from '@/components/management/product/ProductVersion'
 import UserList from '@/components/management/user/UserList'
 import UserEdit from '@/components/management/user/UserEdit'
 
@@ -59,6 +63,12 @@ const routes = [{
     components: {
         default: OrderDetail,
     }
+},{
+    path: '/payment',
+    name: 'Payment',
+    components: {
+        default: Payment,
+    }
 }, {
     path: '/mine',
     name: 'Mine',
@@ -100,6 +110,24 @@ const routes = [{
         name: 'ProductEdit',
         components: {
             default: ProductEdit,
+        },
+    },{
+        path: 'productadd',
+        name: 'ProductAdd',
+        components: {
+            default: ProductAdd,
+        },
+    },{
+        path: 'productcolor',
+        name: 'ProductColor',
+        components: {
+            default: ProductColor,
+        },
+    },{
+        path: 'productversion',
+        name: 'ProductVersion',
+        components: {
+            default: ProductVersion,
         },
     }]
 }];

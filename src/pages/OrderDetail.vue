@@ -99,36 +99,36 @@
         <li>小计（元）</li>
       </ul>
     </div>
-    <div class="orderItem">
+    <div class="orderItem" v-for="item in cart" :key="item.productId">
           <div class="itemPic">
-              <img src="../assets/logo.png" alt="">
+              <img :src="item.imgPath1" alt="">
           </div>
           <div class="itemTitle">
               <span class="itemVersion">
-                  VIVO X20  4GB+64GB
+                {{item.productName}}  {{item.versionName}}
               </span>
               <span class="itemColor">
-                  颜色：玫瑰金
+                  颜色：{{item.colorName}}
               </span>
           </div>
           <div class="itemPrice">
-              1598.00
+              {{item.price}}
           </div>
           <div class="itenCount">
-            1
+            {{item.buyNum}}
           </div>
           <div class="totalprice">
-              1598.00
+            {{item.price * item.buyNum}}
         </div>
     </div>
     <div class="toPay">
-      <p>应付总额：<span>￥2397.00</span><br />
+      <p>应付总额：<span>￥{{account}}</span><br />
          收件人：{{choicedReceiver}}<br />
          联系电话： {{choicePhone}}<br />
          收货地址：{{choicedAddress}}
          
       </p>
-      <div class="btn-toPay">
+      <div class="btn-toPay" @click="handlePay">
         提交订单
       </div>
     </div>
@@ -160,6 +160,9 @@ export default {
       choicedReceiver: '',
       choicePhone: '',
       choicedAddress: '',
+      cart: [],
+      account: '',
+      order: {}
     }
   },
   components: { 
@@ -170,7 +173,7 @@ export default {
     // console.log(this.$route.params.id)
     // this.fetchAllAddress()
     const user_id = window.sessionStorage.user_id
-    console.log("ok")
+    console.log(user_id)
     // 获取收货地址
       this.$http.getAddress(user_id).then(resp => {
         console.log(resp)
@@ -179,6 +182,26 @@ export default {
           console.log(this.allAddress)
         }
       })
+    // 获取存入购物车的数据
+    // if(user_id == 10)
+    // this.cart = window.sessionStorage.cart
+    // console.log(this.cart)
+    this.$http.getCarts(user_id).then(resp => {
+      console.log(resp)
+      this.cart = resp.data
+      // 计算总金额
+    const prices = []
+    this.cart.forEach(item => {
+      console.log(item) 
+        prices.push(item.price * item.buyNum)
+    })
+    console.log(prices)
+    this.account = prices.reduce((curr,result) => {
+        return result += curr
+    })
+    console.log(this.account)
+    })
+    
   },
   methods: {
     showModal() {
@@ -260,10 +283,39 @@ export default {
       if(result){
         this.allAddress = this.allAddress.filter(_item => _item.receiveAdressId !== item.receiveAdressId)
         this.$http.delAddress(item.receiveAdressId).then(resp => {
-          console.log(resp)
+          // console.log(resp)
         })
       }
-      
+    },
+    // 提交订单
+    handlePay() {
+      this.order = {
+        orderId: parseInt(10000000000000000 * Math.random()),
+        shouldPay: this.account
+      }
+      window.sessionStorage.setItem("order",JSON.stringify(this.order))
+      const orders = this.cart
+      const user_id = window.sessionStorage.user_id
+      orders.forEach(item => {
+        let paramsOrder = {
+          userId: user_id,
+          productId: item.productId,
+          color: item.colorName,
+          version: item.versionName,
+          price: item.price,
+          productCount: item.buyNum,
+        }
+        console.log(paramsOrder)
+        this.$http.addOrder(paramsOrder).then(resp => {
+          console.log(resp)
+          if(resp.status === 200){
+            this.$router.push({
+              path: '/payment'
+            })
+          }
+          
+        })
+      })
     }
   }
 }
@@ -410,7 +462,6 @@ export default {
       }
       .itemTitle {
         width: 274px;
-        height: 100%;
         position: absolute;
         left: 250px;
         font-size: 12px;
@@ -480,6 +531,7 @@ export default {
         position: absolute;
         right: 30px;
         bottom: 20px;
+        cursor: pointer;
       }
     }
     #footer {
