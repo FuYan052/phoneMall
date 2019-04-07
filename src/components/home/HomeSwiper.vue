@@ -4,8 +4,8 @@
       <div 
         class="swiper-slide"
         v-for="item in swiperPic"
-        :key="item.id"
-      ><img :src="item.imageUrl"></div>
+        :key="item.b_id"
+      ><img :src="item.url"></div>
     </div>
     <!-- 如果需要分页器 -->
     <div class="swiper-pagination"></div>
@@ -19,15 +19,16 @@ export default {
   name: "HomeSwiper",
   data() {
     return {
-      swiperPic: []
+      swiperPic: [],
     };
   },
   created() {
     // console.log(this.$http)
     this.$http.getBanners()
         .then(resp => {
-            // console.log(resp)
-            this.swiperPic = resp.data.data.banners
+            console.log(resp.data)
+            this.swiperPic = resp.data.data
+            console.log(this.swiperPic)
             this.$nextTick().then(this.initSwiper)
         })
         

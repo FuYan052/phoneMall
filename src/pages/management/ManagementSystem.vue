@@ -17,13 +17,15 @@
             <a-sub-menu key="sub9">
               <span slot="title">
                 <a-icon type="user"/>
-                <router-link to="/admin/product" tag="span">
+                <router-link to="/admin/order" tag="span">
               商品管理
               </router-link>
               </span>
-              <a-menu-item key="3">Tom</a-menu-item>
-              <a-menu-item key="4">Bill</a-menu-item>
-              <a-menu-item key="5">Alex</a-menu-item>
+              <a-menu-item key="3" @click="openProductList">商品列表</a-menu-item>
+              <a-menu-item key="4" @click="openProductEdit">编辑商品</a-menu-item>
+              <a-menu-item key="5" @click="openProductAdd">上新商品</a-menu-item>
+              <a-menu-item key="6" @click="openProductColor">商品颜色</a-menu-item>
+              <a-menu-item key="7" @click="openProductVersion">商品版本</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="1111">
               <span slot="title">
@@ -33,7 +35,7 @@
               </router-link>
               </span>
               <a-menu-item key="3" @click="openList">用户列表</a-menu-item>
-              <a-menu-item key="4" @click="openEdit">编辑用户</a-menu-item>
+              <!-- <a-menu-item key="4" @click="openEdit">编辑用户</a-menu-item> -->
             </a-sub-menu>
           </a-menu>
         </a-layout-sider>
@@ -64,6 +66,7 @@ export default {
   },
   created() {},
   methods: {
+    // 用户管理
     openList() {
       this.$router.push({
         path: '/admin/userlist'
@@ -72,6 +75,33 @@ export default {
     openEdit() {
       this.$router.push({
         path: '/admin/useredit'
+      })
+    },
+    
+    // 商品管理
+    openProductList() {
+      this.$router.push({
+        path: '/admin/productlist'
+      })
+    },
+    openProductEdit() {
+      this.$router.push({
+        path: '/admin/productedit'
+      })
+    },
+    openProductAdd() {
+      this.$router.push({
+        path: '/admin/productadd'
+      })
+    },
+    openProductColor() {
+      this.$router.push({
+        path: '/admin/productcolor'
+      })
+    },
+    openProductVersion() {
+      this.$router.push({
+        path: '/admin/productversion'
       })
     }
   }

@@ -5,17 +5,29 @@
     </div>
     <div class="address">
       <h4>收货人信息</h4>
+      <!-- 已有收获地址 -->
+      <div class="hasAddress" v-for="item in allAddress" :key="item.receiveAdressId">
+        <p><span>收货人：</span>{{item.receiver}}</p>
+        <p><span>联系电话：</span>{{item.signerMobile}}</p>
+        <p><span>详细地址：</span>{{item.province}}{{item.city}}{{item.district}}{{item.address}}</p>
+        <a-checkbox class="checkbox" @change="onChange(item)">使用此地址</a-checkbox>
+        <p class="del" @click="handleDel(item)">删除</p>
+      </div>
+      <!-- 新建收获地址 -->
       <div class="toAdd">
         <a-icon class="addIcon" @click="showModal" type="plus-circle" />
         <p>添加新地址</p>
         <!-- 添加地址模态框 -->
         <a-modal
           title="新建收获地址"
-          v-model="visible"
-          :footer="null"       >
-        <a-form
+          :visible="visible"
+          @ok="handleOk"
+          :confirmLoading="confirmLoading"
+          @cancel="handleCancel"
+        >
+          <a-form
           :form="form"
-          @submit="handleSubmit"
+          
         >
           <a-form-item
             label="收货人"
@@ -24,19 +36,19 @@
           >
             <a-input
               v-decorator="[
-                '收货人',
+                'receiver',
                 {rules: [{ required: true, message: '请输入收货人姓名!' }]}
               ]"
             />
           </a-form-item>
           <a-form-item
-            label="手机号码"
+            label="联系电话"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 25 }"
           >
             <a-input
               v-decorator="[
-                '手机号码',
+                'signerMobile',
                 {rules: [{ required: true, message: '请输入联系电话!' }]}
               ]"
             />
@@ -60,20 +72,10 @@
           >
             <a-input
               v-decorator="[
-                '详细地址',
+                'address',
                 {rules: [{ required: true, message: '请输入详细地址!' }]}
               ]"
             />
-          </a-form-item>
-          <a-form-item
-            :wrapper-col="{ span: 12, offset: 13 }"
-          >
-            <a-button
-              type="primary"
-              html-type="submit"
-            >
-              保存
-            </a-button>
           </a-form-item>
         </a-form>
         </a-modal>
@@ -97,34 +99,36 @@
         <li>小计（元）</li>
       </ul>
     </div>
-    <div class="orderItem">
+    <div class="orderItem" v-for="item in cart" :key="item.productId">
           <div class="itemPic">
-              <img src="../assets/logo.png" alt="">
+              <img :src="item.imgPath1" alt="">
           </div>
           <div class="itemTitle">
               <span class="itemVersion">
-                  VIVO X20  4GB+64GB
+                {{item.productName}}  {{item.versionName}}
               </span>
               <span class="itemColor">
-                  颜色：玫瑰金
+                  颜色：{{item.colorName}}
               </span>
           </div>
           <div class="itemPrice">
-              1598.00
+              {{item.price}}
           </div>
           <div class="itenCount">
-            1
+            {{item.buyNum}}
           </div>
           <div class="totalprice">
-              1598.00
+            {{item.price * item.buyNum}}
         </div>
     </div>
     <div class="toPay">
-      <p>应付总额：<span>￥2397.00</span><br />
-         收件人：张三<br />
-         收货地址：云南玉溪红塔区
+      <p>应付总额：<span>￥{{account}}</span><br />
+         收件人：{{choicedReceiver}}<br />
+         联系电话： {{choicePhone}}<br />
+         收货地址：{{choicedAddress}}
+         
       </p>
-      <div class="btn-toPay">
+      <div class="btn-toPay" @click="handlePay">
         提交订单
       </div>
     </div>
@@ -146,23 +150,173 @@ export default {
       form: this.$form.createForm(this),
       province: '广东', // you can set initial value or not.
       city: 440100, // by code or name.
-      district: ''
+      district: '',
+      address: '',
+      receiver: '',
+      signerMobile: '',
+      visible: false,
+      confirmLoading: false,
+      allAddress: [],
+      choicedReceiver: '',
+      choicePhone: '',
+      choicedAddress: '',
+      cart: [],
+      account: '',
+      order: {}
     }
   },
   components: { 
     RegionPicker,
     BottomHome,
-     },
-  methods: {
-    showModal() {
-      this.visible = true
-    },
-    change() {
-
-    }
   },
   created() {
-    console.log(this.$route.params.id)
+    // console.log(this.$route.params.id)
+    // this.fetchAllAddress()
+    const user_id = window.sessionStorage.user_id
+    console.log(user_id)
+    // 获取收货地址
+      this.$http.getAddress(user_id).then(resp => {
+        console.log(resp)
+        if(resp.status === 200) {
+          this.allAddress = resp.data 
+          console.log(this.allAddress)
+        }
+      })
+    // 获取存入购物车的数据
+    // if(user_id == 10)
+    // this.cart = window.sessionStorage.cart
+    // console.log(this.cart)
+    this.$http.getCarts(user_id).then(resp => {
+      console.log(resp)
+      this.cart = resp.data
+      // 计算总金额
+    const prices = []
+    this.cart.forEach(item => {
+      console.log(item) 
+        prices.push(item.price * item.buyNum)
+    })
+    console.log(prices)
+    this.account = prices.reduce((curr,result) => {
+        return result += curr
+    })
+    console.log(this.account)
+    })
+    
+  },
+  methods: {
+    showModal() {
+      const isLogin = Boolean(window.sessionStorage.user)
+      if(isLogin){
+        this.visible = true
+      } else {
+        alert("请先登录！")
+      }
+        
+    },
+
+    onChange (item) {
+      console.log(item)
+      this.choicedReceiver = item.receiver
+      this.choicedAddress = item.province + item.district + item.address
+      this.choicePhone = item.signerMobile
+      console.log(this.choicedAddress)
+    },
+
+    // 选择城市
+    change(e) {
+      console.log(e)
+      this.province = e.province
+      this.city = e.city
+      this.district = e.district
+    },
+
+    handleOk(e) {
+      const user_id = window.sessionStorage.user_id
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log('Received values of form: ', values);
+          this.receiver = values.receiver
+          this.signerMobile = values.signerMobile
+          this.address = values.address
+        }
+      });
+      const params = {
+        userId: user_id,
+        receiver: this.receiver,
+        province: this.province,
+        city: this.city,
+        district: this.district,
+        address: this.address,
+        signerMobile: this.signerMobile,
+        allAddress: []
+      }
+      // console.log(params)
+
+      // 调保存接口
+      this.$http.saveAddress(params).then(resp => {
+        console.log(resp)
+      })
+      // this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.visible = false;
+        this.confirmLoading = false;
+        // 获取收货地址
+        this.$http.getAddress(user_id).then(resp => {
+          console.log(resp)
+          if(resp.status === 200) {
+            this.allAddress = resp.data 
+            console.log(this.allAddress)
+          }
+        })
+      }, 2000);
+
+      
+    },
+    handleCancel(e) {
+      console.log('Clicked cancel button');
+      this.visible = false
+    },
+    // 删除地址
+    handleDel(item) {
+      const result = confirm("确定要删除吗？")
+      if(result){
+        this.allAddress = this.allAddress.filter(_item => _item.receiveAdressId !== item.receiveAdressId)
+        this.$http.delAddress(item.receiveAdressId).then(resp => {
+          // console.log(resp)
+        })
+      }
+    },
+    // 提交订单
+    handlePay() {
+      this.order = {
+        orderId: parseInt(10000000000000000 * Math.random()),
+        shouldPay: this.account
+      }
+      window.sessionStorage.setItem("order",JSON.stringify(this.order))
+      const orders = this.cart
+      const user_id = window.sessionStorage.user_id
+      orders.forEach(item => {
+        let paramsOrder = {
+          userId: user_id,
+          productId: item.productId,
+          color: item.colorName,
+          version: item.versionName,
+          price: item.price,
+          productCount: item.buyNum,
+        }
+        console.log(paramsOrder)
+        this.$http.addOrder(paramsOrder).then(resp => {
+          console.log(resp)
+          if(resp.status === 200){
+            this.$router.push({
+              path: '/payment'
+            })
+          }
+          
+        })
+      })
+    }
   }
 }
 </script>
@@ -170,7 +324,7 @@ export default {
 <style lang='scss' scoped>
   .order {
     background: #ececeb;
-    height: 100%;
+    // height: 100%;
     .headerTitle {
       width: 88%;
       background: #fff;
@@ -183,7 +337,7 @@ export default {
     }
     .address {
       width: 88%;
-      height: 280px;
+      height: 350px;
       margin: 0 auto;
       margin-top: 20px;
       background: #fff;
@@ -192,21 +346,53 @@ export default {
         font-size: 18px;
         color: #333333;
       }
-      .toAdd {
-        width: 260px;
-        height: 150px;
+      .hasAddress {
+        width: 350px;
+        height: 230px;
+        padding: 10px;
+        float: left;
         border: 1px solid #ccc;
         margin-top: 30px;
+        margin-left: 20px;
+        position: relative;
+        p {
+          line-height: 40px;
+          span {
+            font-weight: bold;
+          }
+        }
+        .checkbox {
+          // width: 25px;
+          height: 25px;
+          font-size: 12px;
+          position: absolute;
+          bottom: 20px;
+        }
+        .del {
+          color: red;
+          position: absolute;
+          right: 15px;
+          bottom: 20px;
+          cursor: pointer;
+        }
+      }
+      .toAdd {
+        width: 300px;
+        height: 230px;
+        float: left;
+        border: 1px solid #ccc;
+        margin-top: 30px;
+        margin-left: 20px;
         position: relative;
         .addIcon {
           position: absolute;
-          top: 45px;
-          left: 115px;
+          top: 80px;
+          left: 130px;
           font-size: 32px;
         }
         p {
           text-align: center;
-          margin-top: 90px;
+          margin-top: 125px;
         }
       }
     }
@@ -276,7 +462,6 @@ export default {
       }
       .itemTitle {
         width: 274px;
-        height: 100%;
         position: absolute;
         left: 250px;
         font-size: 12px;
@@ -318,7 +503,7 @@ export default {
     }
     .toPay {
       width: 88%;
-      height: 255px;
+      height: 300px;
       background: #fff;
       margin: 0 auto;
       margin-top: 20px;
@@ -346,7 +531,11 @@ export default {
         position: absolute;
         right: 30px;
         bottom: 20px;
+        cursor: pointer;
       }
+    }
+    #footer {
+      background: #fff;
     }
   }
 

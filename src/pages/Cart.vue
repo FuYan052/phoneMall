@@ -12,10 +12,16 @@
         </div>
         <div class="content">
             <ul class="tab-header">
-                <li><a-checkbox 
-                :indeterminate="indeterminate"
-                @change="onCheckAllChange"
-                :checked="checkAll">多选/全选</a-checkbox></li>
+                <!-- <li><div :style="{ borderBottom: '1px solid #E9E9E9' }">
+                    <a-checkbox
+                        :indeterminate="indeterminate"
+                        @change="onCheckAllChange"
+                        :checked="checkAll"
+                    >
+                        全选
+                    </a-checkbox>
+                    </div></li> -->
+                <li></li>
                 <li>商品名称</li>
                 <li>价格</li>
                 <li>数量</li>
@@ -27,16 +33,16 @@
                 :key="index"
             >
                 <form action="">
-                    <a-checkbox class="checkBox" ref="{{index}}" @change="onChange"></a-checkbox>
+                    <!-- <a-checkbox-group :options="plainOptions" :value="value" v-model="checkedList" @change="onChange" /> -->
                     <div class="itemPic">
-                        <img src="../assets/logo.png" alt="">
+                        <img :src="item.imgPath1" alt="">
                     </div>
                     <div class="itemTitle">
                         <span class="itemVersion">
-                            VIVO X20  4GB+64GB
+                            {{item.productName}}  {{item.versionName}}
                         </span>
                         <span class="itemColor">
-                            颜色：{{item.color}}
+                            颜色：{{item.colorName}}
                         </span>
                     </div>
                     <div class="itemPrice">
@@ -47,14 +53,14 @@
                             -
                         </div>
                         <div class="count">
-                            {{item.count}}
+                            {{item.buyNum}}
                         </div>
                         <div class="add" @click="handleAdd(item,index)">
                             +
                         </div>
                     </div>
                     <div class="totalprice">
-                        {{item.totalPrice}}
+                        {{item.buyNum * item.price}}
                     </div>
                     <div class="handle">
                         <a-button type="danger" icon="delete" ghost @click="handleDelete(item,index)">删除</a-button>
@@ -62,18 +68,19 @@
                 </form>
             </div>
             <div class="toPay">
-                <a-checkbox class="checkBox" @change="onChange">全选</a-checkbox>
+                <!-- <a-checkbox class="checkBox" @change="onChange">全选</a-checkbox>
                 <div class="delAll">
                     删除选中商品
-                </div>
+                </div> -->
                 <div class="calculate">
-                    已选商品<span class="count"> 2 </span>件, 合计：<span class="totalPrice">￥2397.00</span>
+                    已选商品<span class="count"> {{totalCount}} </span>件, 合计：<span class="totalPrice">￥{{totalPrice}}</span>
                     <router-link 
                     class="btn_toPay"
                     tag="div"
                     :to="{
                         path: `/order`,
-                       }"
+                    }"
+                    @click="toPay"
                     >
                     去结算
                     </router-link>
@@ -85,7 +92,8 @@
 </template>
 
 <script>
-// const plainOptions = [this.$refs]
+const plainOptions = ['Apple', 'Pear', 'Orange']
+const defaultCheckedList = []
 export default {
     name: 'Cart',
     data() {
@@ -94,59 +102,91 @@ export default {
             count: '',
             color: '',
             price: '',
+            checkedList: defaultCheckedList,
             indeterminate: true,
             checkAll: false,
-            plainOptions: [],
+            plainOptions,
+            totalPrice: '',
+            totalCount: ''
         }
     },
     created() {
-        this.cart = JSON.parse(window.sessionStorage.cart)
-        console.log(this.cart)
-        // this.count = this.cart[0].count
-        // this.color = this.cart[0].color
-        // this.price = this.cart[0].price
-    },
-    mounted() {
-        this.plainOptions = this.$refs.checked
+        // this.cart = JSON.parse(window.sessionStorage.cart)
+        // console.log(this.cart)
+        const userId = window.sessionStorage.user_id
+        this.$http.getCarts(userId).then(resp => {
+            console.log(resp)
+            this.cart = resp.data
+            console.log(this.cart)
+            this.calculate()
+        })
+        
     },
     methods: {
+        // const userId = window.sessionStorage.user_id;
         //   数量加按钮
         handleAdd(item,index) {
-            item.count++;
-            if (item.count > 5) 
-                item.count = 5;
-            item.totalPrice = item.price * item.count
+            item.buyNum++;
+            if (item.buyNum > 5) 
+                item.buyNum = 5;
+            item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+            this.calculate()
         },
         //   数量减按钮
         handledec(item,index) {
-            item.count--;
-            if (item.count < 1) 
-                item.count = 1;
-            item.totalPrice = item.price * item.count
+            item.buyNum--;
+            if (item.buyNum < 1) 
+                item.buyNum = 1;
+            item.totalPrice = item.price * item.buyNum
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+            this.calculate()
+        },
+        calculate() {
+            // 每一项总价
+            const prices = []
+            const allCount = []
+            this.cart.forEach(item => {
+                prices.push(item.price * item.buyNum)
+                allCount.push(item.buyNum)
+            })
+            this.totalPrice = prices.reduce((curr,result) => {
+                return result += curr
+            })
+            this.totalCount = allCount.reduce((curr,result) => {
+                return result += curr
+            })
         },
         // 删除单项
         handleDelete(item,index) {
-            console.log(item,index)
-            this.cart = this.cart.filter((delItem,_index) => _index !== index)
-            window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+            // console.log(item,index)
+            const result = confirm("确定删除该项吗？")
+            if(result){
+                this.cart = this.cart.filter((delItem,_index) => _index !== index)
+                window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
+                this.$http.delCart(item.productId).then(resp => {
+                    console.log(resp)
+                })
+                this.calculate()
+            }
         },
         // 复选框按钮
-        onChange (checkedList) {
-            this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
-            this.checkAll = checkedList.length === plainOptions.length
-        },
-        // 全选按钮
-        onCheckAllChange (e) {
-            // this.plainOptions = this.$refs.checked
-            console.log(this.$refs)
-            Object.assign(this, {
-                checkedList: e.target.checked ? plainOptions : [],
-                indeterminate: false,
-                checkAll: e.target.checked,
-            })
-        },
+        // onChange (checkedList) {
+        // this.indeterminate = !!checkedList.length && (checkedList.length < plainOptions.length)
+        // this.checkAll = checkedList.length === plainOptions.length
+        // },
+        // // 全选按钮
+        // onCheckAllChange (e) {
+        //     Object.assign(this, {
+        //         checkedList: e.target.checked ? plainOptions : [],
+        //         indeterminate: false,
+        //         checkAll: e.target.checked,
+        //     })
+        // },
+        // 结算
+        toPay() {
+            
+        }
     }
 }
 </script>

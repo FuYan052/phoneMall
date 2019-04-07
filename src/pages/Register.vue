@@ -93,22 +93,22 @@
     </a-form-item>
     <a-form-item
       v-bind="formItemLayout"
-      label="验证码"
+      label="注册时间"
     >
-      <a-row :gutter="8">
-        <a-col :span="12">
-          <a-input
-            v-decorator="[
-              'captcha',
-              {rules: [{ required: true, message: '请输入验证码!' }]}
-            ]"
-          />
-        </a-col>
-        <a-col :span="12">
-          <!-- <a-button>获取验证码</a-button> -->
-          <check-code></check-code>
-        </a-col>
-      </a-row>
+      <a-date-picker v-decorator="['createAt', config]" />
+    </a-form-item>
+    <a-form-item
+      v-bind="formItemLayout"
+      label="滑动验证"
+    >
+      <drag-verify 
+        :width="width" 
+        :height="height" 
+        :text="text" 
+        :success-text="successText" 
+        :progress-bar-bg="progressBarBg" 
+        @passcallback="checkSuccess"
+        ></drag-verify>
     </a-form-item>
     <a-form-item v-bind="tailFormItemLayout">
       <a-checkbox
@@ -133,18 +133,23 @@
 </template>
 
 <script>
-import CkeckCode from "@/components/checkcode/CkeckCode"
 import HeaderNav from "@/components/header/HeaderNav";
-
+import dragVerify from 'vue-drag-verify'
 
 export default {
   name: "Register",
   components: {
-    CkeckCode:CkeckCode,
-    HeaderNav:HeaderNav
+    HeaderNav:HeaderNav,
+    dragVerify,
   },
   data () {
     return {
+      width: 350,
+      height: 30,
+      text: '滑动至右边',
+      successText: '验证成功',
+      isSuccess: false,
+      progressBarBg: '#CCFFCC',
       confirmDirty: false,
       autoCompleteResult: [],
       formItemLayout: {
@@ -169,11 +174,15 @@ export default {
           },
         },
       },
+       config: {
+        rules: [{ type: 'object', required: true, message: '请选择时间!' }],
+      },
       params:{
-        user_name:'',
+        userName:'',
         password: '',
-        phone_num: '',
+        phoneNum: '',
         address: '',
+        createAt: '',
       }
     };
   },
@@ -184,23 +193,29 @@ export default {
     handleSubmit  (e) {
       e.preventDefault();
       this.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          this.params.user_name = values.username
+        if (!err && this.isSuccess===true && values.agreement===true) {
+          this.params.userName = values.username
           this.params.password = values.password
-          this.params.phone_num = values.phone
+          this.params.phoneNum = values.phone
           this.params.address = values.address
+          this.params.createAt = values.createAt
+
           console.log('Received values of form: ', values);
           console.log(this.params)
           // 注册
           this.$http.getRegister(this.params)
           .then(resp => {
               console.log(resp)
-
-            if(resp.status === 201){
+            if(resp.status === 200){
               console.log(resp)
               alert("注册成功!")
+              this.$router.push({
+                path: '/login'
+              })
             }
           })
+        }else{
+          alert("注册失败！")
         }
       });
     },
@@ -223,6 +238,10 @@ export default {
       }
       callback();
     },
+    checkSuccess() {
+      this.isSuccess = true
+      console.log(this.isSuccess)
+    }
   },
 };
 </script>

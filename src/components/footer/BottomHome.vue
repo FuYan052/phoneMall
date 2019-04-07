@@ -7,7 +7,7 @@
                 <dd><a data-head-click-stat="cfrom=1110&amp;name=NEX双屏版" href="//www.vivo.com.cn/vivo/nexdualdisplay/">NEX双屏版</a></dd>
                 <dd><a data-head-click-stat="cfrom=1110&amp;name=X23" href="//www.vivo.com.cn/vivo/x23/">X23</a></dd>
                 <dd><a data-head-click-stat="cfrom=1110&amp;name=Z3" href="//www.vivo.com.cn/vivo/z3/">Z3</a></dd>
-                <dd><a data-head-click-stat="cfrom=1110&amp;name=vivo摄影" href="http://gallery.vivo.com.cn/">vivo摄影</a></dd>
+                <dd><a data-head-click-stat="cfrom=1110&amp;name=vivo摄影" href="http://gallery.vivo.com.cn/">众尚摄影</a></dd>
                 <dd><a data-head-click-stat="cfrom=1110&amp;name=查找手机" href="http://findphone.vivo.com">查找手机</a></dd>
                 <dd><a data-head-click-stat="cfrom=1110&amp;name=常见问题" href="//www.vivo.com.cn/service/questions/all">常见问题</a></dd>
             </dl>
@@ -36,7 +36,7 @@
         </li>
         <li>
             <dl class="vp-foot-category" data-height="7.832906666666666rem" style="">
-                <dt>vivo社区</dt>
+                <dt>众尚社区</dt>
                 <dd><a data-head-click-stat="cfrom=1113&amp;name=社区首页" href="https://bbs.vivo.com.cn/index.php">社区首页</a></dd>
                 <dd><a data-head-click-stat="cfrom=1113&amp;name=摄影专区" href="https://bbs.vivo.com.cn/vpai.php">摄影专区</a></dd>
                 <dd><a data-head-click-stat="cfrom=1113&amp;name=微博" href="https://weibo.com/vivomobile" target="_blank">微博</a></dd>
@@ -46,8 +46,8 @@
         </li>
         <li>
             <dl class="vp-foot-category">
-                <dt>关于vivo</dt>
-                <dd><a data-head-click-stat="cfrom=1114&amp;name=vivo简介" href="//www.vivo.com.cn/about">vivo简介</a></dd>
+                <dt>关于众尚</dt>
+                <dd><a data-head-click-stat="cfrom=1114&amp;name=vivo简介" href="//www.vivo.com.cn/about">众尚简介</a></dd>
                 <dd><a data-head-click-stat="cfrom=1114&amp;name=工作机会" href="https://hr.vivo.com">工作机会</a></dd>
                 <dd><a data-head-click-stat="cfrom=1114&amp;name=新闻资讯" href="//www.vivo.com.cn/brand/news/list">新闻资讯</a></dd>
                 <dd><a data-head-click-stat="cfrom=1114&amp;name=采购平台" href="https://supply.vivo.com.cn" target="_blank">采购平台</a></dd>
