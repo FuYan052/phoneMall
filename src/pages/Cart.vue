@@ -130,6 +130,10 @@ export default {
             if (item.buyNum > 5) 
                 item.buyNum = 5;
             item.totalPrice = item.price * item.buyNum
+            // console.log(this.cart)
+            // console.log(item,index)
+            this.cart[index].buyNum = item.buyNum
+            console.log(this.cart[index].buyNum )
             window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
             this.calculate()
         },
@@ -165,7 +169,7 @@ export default {
                 this.cart = this.cart.filter((delItem,_index) => _index !== index)
                 window.sessionStorage.setItem('cart',JSON.stringify(this.cart))
                 this.$http.delCart(item.productId).then(resp => {
-                    console.log(resp)
+                    // console.log(resp)
                 })
                 this.calculate()
             }

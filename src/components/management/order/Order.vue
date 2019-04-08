@@ -103,8 +103,11 @@ export default {
       console.log(resp)
       this.data = resp.data
       console.log(this.data)
-      console.log(typeof(this.data[0].price))
-      this.totalPrice = Number(this.data.price) * this.data.productCount
+      this.data.forEach(item => {
+        const _totalPrice = item.productCount * item.price
+        item.totalPrice = _totalPrice
+      })
+      console.log(this.data)
     })
   },
   methods: {

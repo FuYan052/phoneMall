@@ -4,8 +4,12 @@
       <div class="pic-wrap">
         <!--手机大图-->
         <div class="p-m">
-          <img :src="currentColorImg" alt>
+          <!-- <img :src="currentColorImg" alt> -->
+          <pic-zoom id="img" :url="currentColorImg" :scale="2" scroll='true'></pic-zoom>
         </div>
+        <!-- <div class="pic-box"> 
+            <pic-zoom :url="currentColorImg" :scale="3"></pic-zoom>
+        </div> -->
         <!-- <div class="smallImg">
           <div class="itemSmallImg" v-for="item in smallImg" :key="item.id">
             <img :src="item.img" alt>
@@ -69,6 +73,7 @@
 </template>
 
 <script>
+import PicZoom from 'vue-piczoom'
 import BottomHome from "@/components/footer/BottomHome";
 import {
   mapState,
@@ -76,6 +81,7 @@ import {
 export default {
   name: "Detail",
   components: {
+    PicZoom,
     BottomHome: BottomHome
   },
   data() {
@@ -259,10 +265,16 @@ export default {
         width: 400px;
         height: 500px;
         margin: 30px auto;
-        img {
-          width: 100%;
-          height: 100%;
-        }
+        #img{
+          img {
+          width: 400px !important;
+          height: 500px !important;
+          }
+        } 
+      }
+      .pic-box{
+        width:500px;
+        height: 500px;
       }
       .smallImg {
         width: 400px;

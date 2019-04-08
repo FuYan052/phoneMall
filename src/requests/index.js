@@ -158,3 +158,7 @@ export const addColor = (params) => {
 export const addVersion = (params) => {
   return ajax.post('http://192.168.137.45:8001/phone/addVer', params)
 }
+// 测试
+export const test = () => {
+  return ajax.get('http://114.115.137.155:8080/ac1_categorytop10')
+}

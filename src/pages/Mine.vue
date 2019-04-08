@@ -128,6 +128,10 @@ export default {
       this.phoneNum = this.userInfo.phoneNum
       this.address = this.userInfo.address
     })
+    // 测试
+    this.$http.test().then(resp => {
+      console.log(resp)
+    })
   },
   methods: {
     logout() {
@@ -202,7 +206,7 @@ export default {
     .bg {
       width: 80%;
       height: 75%;
-      border: 1px solid;
+      // border: 1px solid;
       margin: 100px auto;
       background: url(../assets/bg1.jpg);
       background-size: cover;
@@ -230,7 +234,7 @@ export default {
         width: 85%;
         height: 500px;
         margin: 0 auto;
-        border:1px solid steelblue;
+        // border:1px solid steelblue;
         p {
           font-size: 26px;
           font-weight: bold;

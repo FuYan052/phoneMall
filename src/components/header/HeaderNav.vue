@@ -100,7 +100,7 @@ export default {
         ul {
             width: 800px;
             height: 60px;
-            margin: 0 auto;
+            margin: 0 23%;
             line-height: 60px;
             display: flex;
             justify-content: space-between;
