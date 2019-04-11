@@ -183,26 +183,30 @@ export default {
         }
       })
     // 获取存入购物车的数据
-    if(user_id == 10)
-    this.cart = JSON.parse(window.sessionStorage.cart) 
-    console.log(this.cart)
+    // if(user_id)
+    // this.cart = JSON.parse(window.sessionStorage.cart)
+    // console.log(this.cart)
+    // const prices = []
+    // this.cart.forEach(item => {
+    //   // console.log(item) 
+    //     prices.push(item.price * item.buyNum)
+    // })
+
+    this.$http.getCarts(user_id).then(resp => {
+      console.log(resp)
+      this.cart = resp.data
+    //   // 计算总金额
     const prices = []
     this.cart.forEach(item => {
-      console.log(item) 
+      // console.log(item) 
         prices.push(item.price * item.buyNum)
     })
-
-    // this.$http.getCarts(user_id).then(resp => {
-    //   console.log(resp)
-    //   this.cart = resp.data
-    //   // 计算总金额
-    
     // console.log(prices)
     this.account = prices.reduce((curr,result) => {
         return result += curr
     })
-    console.log(this.account)
-    
+    // console.log(this.account)
+    })
   },
   methods: {
     showModal() {

@@ -1,6 +1,9 @@
 <template>
   <div class="register">
-     <a-form
+    <!-- <img src="../assets/banner1.jpg" alt=""> -->
+    <div class="wrap">
+      <h2>账户登录</h2>
+      <a-form
     :form="form"
     @submit="handleSubmit"
   >
@@ -129,7 +132,7 @@
     </a-form-item>
   </a-form>
   </div>
-  
+  </div>
 </template>
 
 <script>
@@ -248,9 +251,33 @@ export default {
 
 <style lang='scss' scoped>
 .register {
-  width: 500px;
-  height: 800px;
-  margin: 200px auto;
-}
+  // height: 100%;
+  // position: relative;
+  // img {
+  //   height: 100%;
+  //   position: absolute;
+  //   top: 0;
+  //   left: -700px;
+  // }
+  background: url(../assets/banner1.jpg);
+  background-size: 100% 100%;
+  .wrap {
+    width: 560px;
+    padding-right: 60px;
+    height: 700px;
+    padding-top: 50px;
+    background: #fff;
+    margin: 200px 20%;
+    z-index: 5;
+      h2 {
+        font-size: 26px;
+        font-weight: bold;
+        text-align: center;
+        color: #1890ff;
+        padding-bottom: 50px;
+      }
+    }
+  }
+  
 </style>
 

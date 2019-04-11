@@ -5,7 +5,7 @@
         <!--手机大图-->
         <div class="p-m">
           <!-- <img :src="currentColorImg" alt> -->
-          <pic-zoom id="img" :url="currentColorImg" :scale="2" scroll='true'></pic-zoom>
+          <pic-zoom id="img" :url="currentColorImg" :scale="2"></pic-zoom>
         </div>
         <!-- <div class="pic-box"> 
             <pic-zoom :url="currentColorImg" :scale="3"></pic-zoom>

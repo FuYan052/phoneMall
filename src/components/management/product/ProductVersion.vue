@@ -122,6 +122,9 @@ export default {
           }
           this.$http.addVersion(params).then(resp => {
           console.log(resp)
+          if(resp.status === 200){
+            alert("添加成功！")
+          }
       })
         }
       });

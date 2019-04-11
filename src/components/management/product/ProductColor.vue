@@ -49,7 +49,7 @@
               placeholder="请输入商品名称"
             />
           </a-form-item>
-          <a-form-item
+          <!-- <a-form-item
             label="图片路径"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 12 }"
@@ -61,8 +61,8 @@
               ]"
               placeholder="请输入图片路径"
             />
-          </a-form-item>
-          <!-- <a-form-item
+          </a-form-item> -->
+          <a-form-item
             v-bind="formItemLayout"
             label="图片路径"
             :label-col="{ span: 5 }"
@@ -70,7 +70,7 @@
             extra=""
           >
             <a-upload
-            v-decorator="['img', {
+            v-decorator="['图片路径', {
           getValueFromEvent: normFile,
         }]"
               action="http://192.168.43.204:8001/phone/uploadImg"
@@ -81,7 +81,7 @@
                 <a-icon type="upload" /> 上传图片
               </a-button>
             </a-upload>
-          </a-form-item>  -->
+          </a-form-item> 
           <a-form-item
             :wrapper-col="{ span: 12, offset: 6 }"
           >
@@ -169,10 +169,13 @@ export default {
           const params = {
             productId: values.商品编号,
             colorName: values.颜色名称,
-            colorImgPath: values.颜色编号,
+            colorImgPath: values.图片路径[0].name,
           }
           this.$http.addColor(params).then(resp => {
           console.log(resp)
+          if(resp.status === 200){
+            alert("添加成功！")
+          }
       })
         }
       });

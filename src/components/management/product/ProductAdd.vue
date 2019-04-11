@@ -86,7 +86,7 @@
               placeholder="请输入销售状态"
             />
           </a-form-item>
-          <a-form-item
+          <!-- <a-form-item
             label="商品路径"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 12 }"
@@ -98,7 +98,27 @@
               ]"
               placeholder="请输入商品路径"
             />
-          </a-form-item>
+          </a-form-item> -->
+          <a-form-item
+            v-bind="formItemLayout"
+            label="商品路径"
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 12 }"
+            extra=""
+          >
+            <a-upload
+            v-decorator="['商品路径', {
+          getValueFromEvent: normFile,
+        }]"
+              action="http://192.168.43.204:8001/phone/uploadImg"
+              listType="picture"
+              id="upload-list-inline"
+            >
+              <a-button>
+                <a-icon type="upload" /> 上传图片
+              </a-button>
+            </a-upload>
+          </a-form-item> 
           <a-form-item
             :wrapper-col="{ span: 12, offset: 6 }"
           >
@@ -157,12 +177,15 @@ export default {
             productName: values.商品名称,
             productDescribe: values.商品描述,
             isSelling: values.销售状态,
-            imgUrl: values.商品路径,            
+            imgUrl: values.商品路径[0].name,            
             
             }
           console.log(params)
           this.$http.addPro(params).then(resp => {
           console.log(resp)
+            if(resp.status === 200){
+              alert("添加成功！")
+            }
           })
         }
       });

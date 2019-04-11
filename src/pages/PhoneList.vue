@@ -15,7 +15,12 @@
             <a-breadcrumb>
                 <a-breadcrumb-item href="">
                     <a-icon class="text" type="home" />
-                    <span class="text">Home</span>
+                    <router-link 
+                    class="text" 
+                    tag="span" 
+                    :to="{
+                        path: '/home'
+                        }">Home</router-link>
                 </a-breadcrumb-item>
                 <a-breadcrumb-item href="">
                     <a-icon class="text" type="mobile" />
@@ -226,7 +231,7 @@ export default {
             // background: #fff;
             margin: 0 auto;
             margin-top: 50px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.3);
             .text {
                 color: #fff;
                 font-size: 22px;

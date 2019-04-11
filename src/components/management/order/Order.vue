@@ -1,18 +1,17 @@
 <template>
   <div class="order">
-    <a-card title="订单列表"></a-card>
+    <a-card title="订单列表">
+      <download-excel
+        class = "export-excel-wrapper"
+        :data = "json_data"
+        :fields = "json_fields"
+        name = "filename.xls">
+        <a-button type="primary">导出EXCEL</a-button>
+        <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+        <!-- <el-button type="primary" size="small">导出EXCEL</el-button> -->
+    </download-excel>
+    </a-card>
     <a-table :columns="columns" :dataSource="data" bordered>
-    <!-- <template v-for="col in ['name', 'age', 'address']" :slot="col" slot-scope="text, record, index">
-      <div :key="col">
-        <a-input
-          v-if="record.editable"
-          style="margin: -5px 0"
-          :value="text"
-          @change="e => handleChange(e.target.value, record.key, col)"
-        />
-        <template v-else>{{text}}</template>
-      </div>
-    </template> -->
     <template slot="operation" slot-scope="text, record">
         <a-popconfirm
           v-if="data.length"

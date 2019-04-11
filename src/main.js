@@ -5,6 +5,7 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import RegionPicker from 'vue-region-picker'
 import REGION_DATA from 'china-area-data'
+import JsonExcel from 'vue-json-excel'
 
 
 import App from './App'
@@ -19,6 +20,7 @@ Vue.prototype.$http = $http;
 Vue.use(RegionPicker, {
   region: REGION_DATA
 });
+Vue.component('downloadExcel', JsonExcel)
 
 // router.beforeEach((to, from, next) => {
 //   const token = store.state.token ? store.state.token : window.sessionStorage.getItem('token')

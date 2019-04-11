@@ -19,6 +19,7 @@
     "v-distpicker": "^1.1.0",
     "vue": "^2.5.2",
     "vue-drag-verify": "^1.0.6",
+    "vue-json-excel": "^0.2.98",
     "vue-piczoom": "^1.0.6",
     "vue-region-picker": "^3.0.1",
     "vue-router": "^3.0.1",
